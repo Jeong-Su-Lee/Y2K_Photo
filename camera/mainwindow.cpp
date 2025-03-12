@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QFile>
 #include <QUdpSocket>
+#include <QPainter>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     udp_listener = new UDPListenerThread(this);
     connect(udp_listener, &UDPListenerThread::captureRequested, this, &MainWindow::save_current_frame);
     udp_listener->start();
+
+    overlay_pixmap = QPixmap("/mnt/nfs/Guidline/guild_line_1.png");
 }
 
 MainWindow::~MainWindow()
@@ -29,6 +32,12 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
     //qDebug() << "handle_data" << data << width << height;
     yuyv2rgb(data, width, height, image_buf);
     QPixmap pixmap = QPixmap::fromImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+    if(!overlay_pixmap.isNull()){
+        QPainter painter(&pixmap);
+        painter.setOpacity(0.5); // 0.0 ~1.0
+        painter.drawPixmap(0,0,overlay_pixmap); //draw guide line over frame
+        painter.end();
+    }
     ui->lblImg->setPixmap(pixmap);
 }
 

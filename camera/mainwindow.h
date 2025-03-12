@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QDateTime>
 #include <QDebug>
+#include <QPixmap>
 #include "camerathread.h"
 #include "udp_listener_thread.h"
 
@@ -27,6 +28,7 @@ private:
     void sendImageToServer(const QString &filePath);
     Ui::MainWindow *ui;
     CameraThread *camera;
+    QPixmap overlay_pixmap;
     UDPListenerThread *udp_listener;
     bool yuyv2rgb(const uchar *yuyv, int width, int height, uchar *rgb);
     void yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb);
