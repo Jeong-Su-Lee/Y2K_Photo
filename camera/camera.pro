@@ -15,10 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
     mainwindow.cpp \
     camerathread.cpp \
-    udp_listener_thread.cpp
+    udp_listener_thread.cpp \
+    camerasoundplayer.cpp \
+    camerasoundthread.cpp
 
 HEADERS  += mainwindow.h \
     camerathread.h \
-    udp_listener_thread.h
+    udp_listener_thread.h \
+    camerasoundplayer.h \
+    camerasoundthread.h
 
 FORMS    += mainwindow.ui

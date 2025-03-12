@@ -1,11 +1,15 @@
 #ifndef CAMERASOUNDPLAYER_H
 #define CAMERASOUNDPLAYER_H
 
+#include <QObject>
 
-class camerasoundplayer
+class CameraSoundPlayer : public QObject
 {
+    Q_OBJECT
+
 public:
-    camerasoundplayer();
+    explicit CameraSoundPlayer(QObject *parent = nullptr);
+    void startCameraSound();
 };
 
 #endif // CAMERASOUNDPLAYER_H
