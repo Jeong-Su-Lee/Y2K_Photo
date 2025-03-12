@@ -143,7 +143,8 @@ void MainWindow::sendImageToServer(const QString& filePath)
         udpSender.writeDatagram(buffer, serverAddress, serverPort);
         QThread::msleep(10); // 너무 빠르면 유실될 수 있으니 약간 텀 줌
     }
-
+    udpSender.writeDatagram("EOF", serverAddress, serverPort);
     file.close();
     qDebug() << "이미지 전송 완료.";
 }
+
