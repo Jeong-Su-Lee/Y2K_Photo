@@ -4,9 +4,47 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <time.h>
+#include <pthread.h>
+#include <jpeglib.h>
+
+
 
 #define SERVER_PORT 25000
 #define BUF_SIZE 1024
+
+struct ThreadArgs {
+    int sockfd;
+    struct sockaddr_in client_addr;
+};
+
+void send_capture_message(int sockfd, struct sockaddr_in client_addr);
+
+void* time_sender_thread(void *arg) {
+    struct ThreadArgs *args = (struct ThreadArgs *)arg;
+    int sockfd = args->sockfd;
+    struct sockaddr_in client_addr = args->client_addr;
+    int count = 8;
+
+    char time_buf[100];
+    while (1) {
+        snprintf(time_buf, sizeof(time_buf), "%d", count);
+        if (count == 0){
+            send_capture_message(sockfd, client_addr);
+            count = 8;
+        }
+        printf("Count 전송 : %d\n", count);
+        sendto(sockfd, time_buf, strlen(time_buf), 0,
+               (struct sockaddr *)&client_addr, sizeof(client_addr));
+               
+        if (count == 0) {
+                send_capture_message(sockfd, client_addr);
+                count = 9;
+            }
+        sleep(1); // 1초마다 전송
+        count -= 1;
+    }
+    return NULL;
+}
 
 void send_capture_message(int sockfd, struct sockaddr_in client_addr)
 {
@@ -67,9 +105,19 @@ int main() {
                    inet_ntoa(client_addr.sin_addr),
                    ntohs(client_addr.sin_port));
             saved_client_addr.sin_port = htons(SERVER_PORT);
+            pthread_t tid;
+            struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
+            args->sockfd = sockfd;
+            args->client_addr = saved_client_addr;
 
-            sleep(1);  // 약간의 지연 후
-            send_capture_message(sockfd, saved_client_addr);
+            if (pthread_create(&tid, NULL, time_sender_thread, args) != 0) {
+                perror("타임 스레드 생성 실패");
+                free(args);
+            } else {
+                pthread_detach(tid); // 메모리 자동 회수
+            }
+            // sleep(1);  // 약간의 지연 후
+            // send_capture_message(sockfd, saved_client_addr);
             continue;
         }
 
@@ -81,8 +129,8 @@ int main() {
                 fp = NULL;
             }
             receiving_image = 0;
-            sleep(3);  // 약간 텀을 주고
-            send_capture_message(sockfd, saved_client_addr);
+            // sleep(3);  // 약간 텀을 주고
+            // send_capture_message(sockfd, saved_client_addr);
             continue;
         }
 

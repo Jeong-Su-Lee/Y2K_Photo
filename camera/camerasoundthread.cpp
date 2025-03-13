@@ -15,12 +15,12 @@ void CameraSoundThread::run()
     QProcess *playProcess = new QProcess();
 
     // Run the setup commands
-    setupProcess->start("sh", QStringList() << "-c" << "cd /mnt/nfs && source ./alsa.sh && ./aplay -l && ./amixer -c 0 cset numid=1 80%");
+//    setupProcess->start("sh", QStringList() << "-c" << "cd /mnt/nfs && source ./alsa.sh && ./aplay -l && ./amixer -c 0 cset numid=1 80%");
     setupProcess->waitForFinished();
     delete setupProcess;
 
     // Start the aplay process
-    playProcess->start("sh", QStringList() << "-c" << "./aplay -Dhw:0,0 /mnt/nfs/test_contents/camera_capture_1.wav");
+    playProcess->start("sh", QStringList() << "-c" << "aplay -Dhw:0,0 /mnt/nfs/test_contents/camera_capture_1.wav");
 
     // Create a timer to terminate the play process after 3 seconds
     QTimer timer;
