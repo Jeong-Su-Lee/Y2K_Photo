@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include "camerathread.h"
 #include "udp_listener_thread.h"
+#include "camerasoundplayer.h"
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +31,7 @@ private:
     CameraThread *camera;
     QPixmap overlay_pixmap;
     UDPListenerThread *udp_listener;
+    CameraSoundPlayer mCameraSoundPlayer;
     bool yuyv2rgb(const uchar *yuyv, int width, int height, uchar *rgb);
     void yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb);
     uchar *image_buf;

@@ -15,6 +15,7 @@ UDPListenerThread::UDPListenerThread(QObject *parent)
     quint16 targetPort = 25000;
 
     qint64 bytes = udpSocket->writeDatagram(datagram, targetIp, targetPort);
+
     qDebug() << "UDP 전송됨:" << datagram << ", 바이트 수:" << bytes;
 
     if (bytes == -1) {

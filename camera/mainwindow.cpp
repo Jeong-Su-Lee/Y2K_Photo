@@ -115,9 +115,10 @@ void MainWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 
 void MainWindow::save_current_frame()
 {
-    QString filename = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz") + ".png";
+    QString filename = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz") + ".jpg";
     QImage image(image_buf, 640, 480, QImage::Format_RGB888);
-    if (image.save(filename,"PNG")) {
+    mCameraSoundPlayer.startCameraSound();
+    if (image.save(filename,"JPG")) {
         qDebug() << "이미지 저장됨:" << filename;
         sendImageToServer(filename); // 여기서 전송
     } else {
@@ -141,7 +142,7 @@ void MainWindow::sendImageToServer(const QString& filePath)
     while (!file.atEnd()) {
         buffer = file.read(1024); // 1024 바이트씩 전송
         udpSender.writeDatagram(buffer, serverAddress, serverPort);
-        QThread::msleep(10); // 너무 빠르면 유실될 수 있으니 약간 텀 줌
+//        QThread::msleep(10); // 너무 빠르면 유실될 수 있으니 약간 텀 줌
     }
     udpSender.writeDatagram("EOF", serverAddress, serverPort);
     file.close();
