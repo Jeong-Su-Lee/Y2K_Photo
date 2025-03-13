@@ -12,7 +12,7 @@ $(TARGET_BD): $(TARGET_BD).c
 	$(CC_BD) $(CFLAGS) -o $@ $<
 
 $(TARGET_PC): $(TARGET_PC).c
-	$(CC_PC) $(CFLAGS) -o $@ $<
+	$(CC_PC) $(CFLAGS) -pthread -o $@ $<
 
 clean:
 	rm -f $(TARGETS)

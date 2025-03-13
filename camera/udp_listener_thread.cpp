@@ -55,7 +55,9 @@ void UDPListenerThread::run()
                 qDebug() << "UDP 신호 수신됨: " << datagram;
 
                 // 신호 발생
-                emit captureRequested();
+                if (QString(datagram).trimmed() == "capture"){
+                    emit captureRequested();
+                }
             }
         }
     }
