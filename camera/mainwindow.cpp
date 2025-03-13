@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    image_buf = new uchar[320 * 240 * 3];
+    image_buf = new uchar[640 * 480 * 3];
     camera = new CameraThread(this);
     connect(camera, SIGNAL(send_data(const uchar*,int,int)), this, SLOT(handle_data(const uchar*,int,int)));
     camera->start();
