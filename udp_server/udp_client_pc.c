@@ -51,7 +51,7 @@ void* time_sender_thread(void *arg) {
     return NULL;
 }
 
-void  (int sockfd, struct sockaddr_in client_addr)
+void send_capture_message (int sockfd, struct sockaddr_in client_addr)
 {
     printf("클라이언트에 'capture' 명령 전송\n");
     printf("전송하는 클라이언트 정보 : %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
