@@ -116,7 +116,7 @@ void MainWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 void MainWindow::save_current_frame()
 {
     QString filename = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz") + ".jpg";
-    QImage image(image_buf, 320, 240, QImage::Format_RGB888);
+    QImage image(image_buf, 640, 480, QImage::Format_RGB888);
     mCameraSoundPlayer.startCameraSound();
     if (image.save(filename,"JPG")) {
         qDebug() << "이미지 저장됨:" << filename;
