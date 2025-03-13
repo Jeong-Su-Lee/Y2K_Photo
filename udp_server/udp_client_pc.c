@@ -13,36 +13,33 @@
 #define BUF_SIZE 1024
 #define MAX_CLIENTS 10
 
-struct ThreadArgs {
-    int sockfd;
-    struct sockaddr_in client_addr;
-};
+
 typedef struct {
     struct sockaddr_in addr;
     int active;
 } Client;
 
-void send_capture_message(int sockfd, struct sockaddr_in client_addr);
+struct ThreadArgs {
+    int sockfd;
+    Client clients[MAX_CLIENTS];
+};
+
+void broadcast_message(int sockfd, Client clients[], const char *msg);
 
 void* time_sender_thread(void *arg) {
     struct ThreadArgs *args = (struct ThreadArgs *)arg;
     int sockfd = args->sockfd;
-    struct sockaddr_in client_addr = args->client_addr;
+    Client *clients = args->clients; 
     int count = 8;
 
     char time_buf[100];
     while (1) {
         snprintf(time_buf, sizeof(time_buf), "%d", count);
-        if (count == 0){
-            send_capture_message(sockfd, client_addr);
-            count = 8;
-        }
         printf("Count 전송 : %d\n", count);
-        sendto(sockfd, time_buf, strlen(time_buf), 0,
-               (struct sockaddr *)&client_addr, sizeof(client_addr));
+        broadcast_message(sockfd, clients, time_buf);
                
         if (count == 0) {
-                send_capture_message(sockfd, client_addr);
+                broadcast_message(sockfd, clients, "capture");
                 count = 9;
             }
         sleep(1); // 1초마다 전송
@@ -102,6 +99,8 @@ int main() {
     FILE *fp = NULL;
     int receiving_image = 0;
     Client clients[MAX_CLIENTS] = {0};
+    int flag = -1; // DEBUG 용 추후 수정
+    int count = 0; // DEBUG 용 추후 수정
 
     // UDP 소켓 생성
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -149,38 +148,43 @@ int main() {
             pthread_t tid;
             struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
             args->sockfd = sockfd;
-            args->client_addr = clients[client_index].addr;
-
-            if (pthread_create(&tid, NULL, time_sender_thread, args) != 0) {
-                perror("타임 스레드 생성 실패");
-                free(args);
-            } else {
-                pthread_detach(tid); // 메모리 자동 회수
-            }
+            memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
             // sleep(1);  // 약간의 지연 후
             if(client_index == 1){ //연결이 둘다 됐다면 둘다 전송 
-                broadcast_message(sockfd, clients, "capture");
+                flag = 1; // DEBUG 용 추후 수정
+                if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
+                {
+                    perror("타임 스레드 생성 실패");
+                    free(args);
+                } 
+                else
+                {
+                    pthread_detach(tid); // 메모리 자동 회수
+                }
+                // broadcast_message(sockfd, clients, "capture");
             }
             continue;
         }
         // "EOF" 수신 시 이미지 저장 종료
         if (recv_len >= 3 && strncmp(buffer, "EOF", 3) == 0) {
             printf("이미지 수신 완료!\n");
+            count ++; // DEBUG 용 추후 수정
             if (fp) {
                 fclose(fp);
                 fp = NULL;
             }
             receiving_image = 0;
             // sleep(3);  // 약간 텀을 주고
-            broadcast_message(sockfd, clients, "capture");
+            // broadcast_message(sockfd, clients, "capture");
             continue;
         }
 
         // 이미지 데이터 수신
-        int client_index = find_client(clients,&client_addr);
-        if (client_index != -1) {
+        // client_index = find_client(clients, &client_addr); DEBUG
+        // printf("[DEBUG] :  %d\n", client_index);
+        if (flag == 1) {    // 추후 수정
             if (!fp && !receiving_image) {
-                sprintf(filename, "image_%ld.jpg", time(NULL));
+                sprintf(filename, "image_%d.jpg", count); // DEBUG 용 추후 수정
                 fp = fopen(filename, "wb");
                 if (!fp) {
                     perror("파일 열기 실패");
