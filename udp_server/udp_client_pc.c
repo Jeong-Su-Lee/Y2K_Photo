@@ -7,13 +7,51 @@
 
 #define SERVER_PORT 25000
 #define BUF_SIZE 1024
-
+#define MAX_CLIENTS 10 
+typedef struct {
+    struct sockaddr_in addr;
+    int active;
+} Client;
 void send_capture_message(int sockfd, struct sockaddr_in client_addr)
 {
     printf("클라이언트에 'capture' 명령 전송\n");
+    printf("전송하는 클라이언트 정보 : %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     const char *capture_msg = "capture";
     sendto(sockfd, capture_msg, strlen(capture_msg), 0,
            (struct sockaddr*)&client_addr, sizeof(client_addr));
+}
+void broadcast_message(int sockfd, Client clients[], const char *msg) {
+    for (int i = 0; i < 2; i++) {
+        if (clients[i].active) {
+            sendto(sockfd, msg, strlen(msg), 0,
+                   (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+        }
+    }
+}
+int find_client(Client clients[], struct sockaddr_in *client_addr)
+{
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (clients[i].active &&
+            clients[i].addr.sin_addr.s_addr == client_addr->sin_addr.s_addr &&
+            clients[i].addr.sin_port == client_addr->sin_port) {
+            return i; // 클라이언트 인덱스 반환
+        }
+    }
+    return -1; // 클라이언트를 찾지 못함
+}
+int add_client(Client clients[], struct sockaddr_in *client_addr)
+{
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (!clients[i].active) { // 비활성 클라이언트 슬롯 사용
+            clients[i].addr = *client_addr;
+            clients[i].active = 1;
+            printf("새 클라이언트 추가: %s[%d]:%d\n",
+                   inet_ntoa(client_addr->sin_addr),i, ntohs(client_addr->sin_port));
+            return i; // 새 클라이언트 인덱스 반환
+        }
+    }
+    printf("클라이언트 추가 실패: 최대 클라이언트 수 초과\n");
+    return -1;
 }
 
 int main() {
@@ -24,6 +62,7 @@ int main() {
     char filename[100];
     FILE *fp = NULL;
     int receiving_image = 0;
+    Client clients[MAX_CLIENTS] = {0};
 
     // UDP 소켓 생성
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -47,10 +86,7 @@ int main() {
 
     printf("서버 실행 중... 클라이언트 메시지 대기 중\n");
 
-    // 클라이언트 정보 저장용
-    struct sockaddr_in saved_client_addr;
-    int client_found = 0;
-
+    int client_index = -1;
     while (1) {
         ssize_t recv_len = recvfrom(sockfd, buffer, BUF_SIZE, 0,
                                     (struct sockaddr*)&client_addr, &addr_len);
@@ -58,21 +94,27 @@ int main() {
             perror("recvfrom 실패");
             break;
         }
-
+        buffer[recv_len] = '\0'; //메시지 끝 처리 
+        client_index = find_client(clients, &client_addr);
         // "hello" 수신 시 클라이언트 정보 저장 후 capture 명령 전송
         if (recv_len >= 5 && strncmp(buffer, "hello", 5) == 0) {
-            saved_client_addr = client_addr;
-            client_found = 1;
-            printf("클라이언트 연결됨: %s:%d\n",
+            if(client_index == -1){
+                add_client(clients,&client_addr); //클라이언트 추가   
+                client_index = find_client(clients, &client_addr);
+            }
+            // client_found = 1;
+            printf("클라이언트 추가됨: %s:%d\n",
                    inet_ntoa(client_addr.sin_addr),
                    ntohs(client_addr.sin_port));
-            saved_client_addr.sin_port = htons(SERVER_PORT);
+            clients[client_index].addr.sin_port = htons(SERVER_PORT);
 
             sleep(1);  // 약간의 지연 후
-            send_capture_message(sockfd, saved_client_addr);
+            if(client_index == 1){ //연결이 둘다 됐다면 둘다 전송 
+                //send_capture_message(sockfd, clients[client_index].addr);
+                broadcast_message(sockfd, clients, "capture");
+            }
             continue;
         }
-
         // "EOF" 수신 시 이미지 저장 종료
         if (recv_len >= 3 && strncmp(buffer, "EOF", 3) == 0) {
             printf("이미지 수신 완료!\n");
@@ -82,12 +124,13 @@ int main() {
             }
             receiving_image = 0;
             sleep(3);  // 약간 텀을 주고
-            send_capture_message(sockfd, saved_client_addr);
+            broadcast_message(sockfd, clients, "capture");
             continue;
         }
 
         // 이미지 데이터 수신
-        if (client_found) {
+        int client_index = find_client(clients,&client_addr);
+        if (client_index != -1) {
             if (!fp && !receiving_image) {
                 sprintf(filename, "image_%ld.jpg", time(NULL));
                 fp = fopen(filename, "wb");

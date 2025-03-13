@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
 #include <QUdpSocket>
@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    image_buf = new uchar[640 * 480 * 3];
+    image_buf = new uchar[320 * 240 * 3];
     camera = new CameraThread(this);
     connect(camera, SIGNAL(send_data(const uchar*,int,int)), this, SLOT(handle_data(const uchar*,int,int)));
     camera->start();
@@ -116,7 +116,7 @@ void MainWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 void MainWindow::save_current_frame()
 {
     QString filename = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz") + ".jpg";
-    QImage image(image_buf, 640, 480, QImage::Format_RGB888);
+    QImage image(image_buf, 320, 240, QImage::Format_RGB888);
     mCameraSoundPlayer.startCameraSound();
     if (image.save(filename,"JPG")) {
         qDebug() << "이미지 저장됨:" << filename;
@@ -142,7 +142,6 @@ void MainWindow::sendImageToServer(const QString& filePath)
     while (!file.atEnd()) {
         buffer = file.read(1024); // 1024 바이트씩 전송
         udpSender.writeDatagram(buffer, serverAddress, serverPort);
-//        QThread::msleep(10); // 너무 빠르면 유실될 수 있으니 약간 텀 줌
     }
     udpSender.writeDatagram("EOF", serverAddress, serverPort);
     file.close();
