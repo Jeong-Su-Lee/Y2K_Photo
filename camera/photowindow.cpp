@@ -1,14 +1,25 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "photowindow.h"
+#include "ui_photowindow.h"
+#include "endingwindow.h"
+#include <QString>
 #include <QFile>
 #include <QUdpSocket>
 #include <QPainter>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+PhotoWindow::PhotoWindow(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::PhotoWindow),
+    timer(new QTimer),
+    nextTimer(new QTimer)
 {
     ui->setupUi(this);
+
+    // FIXME: to use server timer.
+    connect(timer, SIGNAL(timeout()), this, SLOT(change_timeText()));
+    timer->start(1000);
+
+    ui->lblTime->setText(QString::number(TIME_LIMIT));
+
 
     image_buf = new uchar[640 * 480 * 3];
     camera = new CameraThread(this);
@@ -16,18 +27,60 @@ MainWindow::MainWindow(QWidget *parent) :
     camera->start();
 
     udp_listener = new UDPListenerThread(this);
-    connect(udp_listener, &UDPListenerThread::captureRequested, this, &MainWindow::save_current_frame);
+    connect(udp_listener, &UDPListenerThread::captureRequested, this, &PhotoWindow::save_current_frame);
     udp_listener->start();
 
     overlay_pixmap = QPixmap("/mnt/nfs/Guidline/guild_line_1.png");
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
+void PhotoWindow::rise_count(){
+    int curCount = ui->lblCount->text().toInt();
+
+    if (curCount == 8) {
+        udp_listener->terminate();
+        return go_to_nextWindow();
+    }
+
+    ui->lblCount->setText(QString::number(curCount+1));
 }
 
-void MainWindow::handle_data(const uchar *data, int width, int height)
+void PhotoWindow::change_timeText()
+{
+    int curTime = ui->lblTime->text().toInt();
+    if (curTime) {
+        ui->lblTime->setText(QString::number(curTime-1));
+    } else {
+
+        ui->lblTime->setText(QString::number(TIME_LIMIT));
+    }
+}
+
+void PhotoWindow::go_to_nextWindow()
+{
+    EndingWindow *endingWindow = new EndingWindow();
+    this->hide();
+    endingWindow->show();
+
+    timer->stop();
+}
+
+
+PhotoWindow::~PhotoWindow()
+{
+    delete ui;
+    delete timer;
+    delete nextTimer;
+
+    delete camera;
+    delete &overlay_pixmap;
+    delete udp_listener;
+    delete &mCameraSoundPlayer;
+}
+
+
+
+
+void PhotoWindow::handle_data(const uchar *data, int width, int height)
 {
     //qDebug() << "handle_data" << data << width << height;
     yuyv2rgb(data, width, height, image_buf);
@@ -38,10 +91,11 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
         painter.drawPixmap(0,0,overlay_pixmap); //draw guide line over frame
         painter.end();
     }
-    ui->lblImg->setPixmap(pixmap);
+    ui->lblImg1->setPixmap(pixmap);
 }
 
-bool MainWindow::yuyv2rgb(const uchar *yuyv, int width, int height, uchar *rgb)
+
+bool PhotoWindow::yuyv2rgb(const uchar *yuyv, int width, int height, uchar *rgb)
 {
     long yuv_size = height * width * 2;
     long rgb_size = height * width * 3;
@@ -56,7 +110,7 @@ bool MainWindow::yuyv2rgb(const uchar *yuyv, int width, int height, uchar *rgb)
     return true;
 }
 
-void MainWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
+void PhotoWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 {
     int y, v, u;
     float r, g, b;
@@ -113,7 +167,7 @@ void MainWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
     rgb[5] = (unsigned char)b;
 }
 
-void MainWindow::save_current_frame()
+void PhotoWindow::save_current_frame()
 {
     QString filename = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz") + ".jpg";
     QImage image(image_buf, 640, 480, QImage::Format_RGB888);
@@ -124,9 +178,12 @@ void MainWindow::save_current_frame()
     } else {
         qDebug() << "이미지 저장 실패";
     }
+
+    rise_count();
+    change_timeText();
 }
 
-void MainWindow::sendImageToServer(const QString& filePath)
+void PhotoWindow::sendImageToServer(const QString& filePath)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {

@@ -19,7 +19,12 @@ SOURCES += main.cpp\
     camerasoundplayer.cpp \
     camerasoundthread.cpp \
     bgmsoundplayer.cpp \
-    bgmsoundthread.cpp
+    bgmsoundthread.cpp \
+    endingwindow.cpp \
+    firstwindow.cpp \
+    guideselectwindow.cpp \
+    photowindow.cpp \
+    secondwindow.cpp
 
 HEADERS  += mainwindow.h \
     camerathread.h \
@@ -27,6 +32,19 @@ HEADERS  += mainwindow.h \
     camerasoundplayer.h \
     camerasoundthread.h \
     bgmsoundplayer.h \
-    bgmsoundthread.h
+    bgmsoundthread.h \
+    endingwindow.h \
+    firstwindow.h \
+    guideselectwindow.h \
+    photowindow.h \
+    secondwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    endingwindow.ui \
+    firstwindow.ui \
+    guideselectwindow.ui \
+    photowindow.ui \
+    secondwindow.ui
+
+RESOURCES += \
+    ../../../../../../nfsroot/images/images.qrc

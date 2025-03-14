@@ -95,7 +95,7 @@ background-color: white;</string>
          <string>None</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../../../nfsroot/images/images.qrc">
+         <iconset resource="../../../../../../nfsroot/images/images.qrc">
           <normaloff>:/images/none.png</normaloff>:/images/none.png</iconset>
         </property>
         <property name="iconSize">
@@ -122,7 +122,7 @@ background-color: white;</string>
          <string>Heart</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../../../nfsroot/images/images.qrc">
+         <iconset resource="../../../../../../nfsroot/images/images.qrc">
           <normaloff>:/images/heart.png</normaloff>:/images/heart.png</iconset>
         </property>
         <property name="iconSize">
@@ -149,7 +149,7 @@ background-color: white;</string>
          <string>Star</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../../../nfsroot/images/images.qrc">
+         <iconset resource="../../../../../../nfsroot/images/images.qrc">
           <normaloff>:/images/star.png</normaloff>:/images/star.png</iconset>
         </property>
         <property name="iconSize">
@@ -176,7 +176,7 @@ background-color: white;</string>
          <string>LG logo</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../../../nfsroot/images/images.qrc">
+         <iconset resource="../../../../../../nfsroot/images/images.qrc">
           <normaloff>:/images/lg.png</normaloff>:/images/lg.png</iconset>
         </property>
         <property name="iconSize">
@@ -193,7 +193,7 @@ background-color: white;</string>
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../nfsroot/images/images.qrc"/>
+  <include location="../../../../../../nfsroot/images/images.qrc"/>
  </resources>
  <connections/>
 </ui>
