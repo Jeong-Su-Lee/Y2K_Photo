@@ -39,6 +39,7 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
         painter.end();
     }
     ui->lblImg->setPixmap(pixmap);
+    ui->lblImg2->setPixmap(pixmap);
 }
 
 bool MainWindow::yuyv2rgb(const uchar *yuyv, int width, int height, uchar *rgb)
