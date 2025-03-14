@@ -6,6 +6,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <jpeglib.h>
+#include "define.h"
 
 
 
@@ -48,19 +49,25 @@ void* time_sender_thread(void *arg) {
     return NULL;
 }
 
-void send_capture_message (int sockfd, struct sockaddr_in client_addr)
+// void send_capture_message (int sockfd, struct sockaddr_in client_addr)
+// {
+//     printf("클라이언트에 'capture' 명령 전송\n");
+//     printf("전송하는 클라이언트 정보 : %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+//     const char *capture_msg = "capture";
+//     sendto(sockfd, capture_msg, strlen(capture_msg), 0,
+//            (struct sockaddr*)&client_addr, sizeof(client_addr));
+// }
+
+void send_message (int sockfd, struct sockaddr_in client_addr, const char *msg)
 {
-    printf("클라이언트에 'capture' 명령 전송\n");
-    printf("전송하는 클라이언트 정보 : %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-    const char *capture_msg = "capture";
-    sendto(sockfd, capture_msg, strlen(capture_msg), 0,
-           (struct sockaddr*)&client_addr, sizeof(client_addr));
+    printf("전송하는 클라이언트 정보 : %s:%d msg : %s\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), msg);
+    sendto(sockfd, msg, strlen(msg), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
 }
+
 void broadcast_message(int sockfd, Client clients[], const char *msg) {
     for (int i = 0; i < 2; i++) {
         if (clients[i].active) {
-            sendto(sockfd, msg, strlen(msg), 0,
-                   (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+            sendto(sockfd, msg, strlen(msg), 0, (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
         }
     }
 }
@@ -98,9 +105,10 @@ int main() {
     char filename[100];
     FILE *fp = NULL;
     int receiving_image = 0;
-    Client clients[MAX_CLIENTS] = {0};
+    Client clients[MAX_CLIENTS] = {0,};
     int flag = -1; // DEBUG 용 추후 수정
     int count = 0; // DEBUG 용 추후 수정
+    char msg[MAX_MSG_LEN] = {0,};
 
     // UDP 소켓 생성
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -135,16 +143,19 @@ int main() {
         buffer[recv_len] = '\0'; //메시지 끝 처리 
         client_index = find_client(clients, &client_addr);
         // "hello" 수신 시 클라이언트 정보 저장 후 capture 명령 전송
-        if (recv_len >= 5 && strncmp(buffer, "hello", 5) == 0) {
+        if (recv_len >= 4 && strncmp(buffer, "CONN", 4) == 0) {
             if(client_index == -1){
                 add_client(clients,&client_addr); //클라이언트 추가   
                 client_index = find_client(clients, &client_addr);
+                sprintf(msg, "CLI%d", client_index + 1);
+                clients[client_index].addr.sin_port = htons(SERVER_PORT);
+                sleep(1); // 충분한 설정시간 줌
+                send_message(sockfd, clients[client_index].addr, msg);
+
+                printf("클라이언트 추가됨: %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             }
             // client_found = 1;
-            printf("클라이언트 추가됨: %s:%d\n",
-                   inet_ntoa(client_addr.sin_addr),
-                   ntohs(client_addr.sin_port));
-            clients[client_index].addr.sin_port = htons(SERVER_PORT);
+            
             pthread_t tid;
             struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
             args->sockfd = sockfd;

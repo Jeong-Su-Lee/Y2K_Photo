@@ -10,7 +10,7 @@ UDPListenerThread::UDPListenerThread(QObject *parent)
 {
     udpSocket = new QUdpSocket(this);
 
-    QByteArray datagram = "hello";
+    QByteArray datagram = "CONN";
     QHostAddress targetIp("192.168.10.2");
     quint16 targetPort = 25000;
 
@@ -55,6 +55,9 @@ void UDPListenerThread::run()
                 qDebug() << "UDP 신호 수신됨: " << datagram;
 
                 // 신호 발생
+                if (datagram.startsWith("CLI")) {
+                    emit clientIdReceived(QString::fromUtf8(datagram));  // 시그널로 MainWindow에 전달
+                }
                 if (QString(datagram).trimmed() == "capture"){
                     emit captureRequested();
                 }

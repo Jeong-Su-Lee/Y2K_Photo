@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     udp_listener = new UDPListenerThread(this);
     connect(udp_listener, &UDPListenerThread::captureRequested, this, &MainWindow::save_current_frame);
+    connect(udp_listener, &UDPListenerThread::clientIdReceived, this, &MainWindow::onClientIdReceived);
+
     udp_listener->start();
 
     overlay_pixmap = QPixmap("/mnt/nfs/Guidline/guild_line_1.png");
@@ -25,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+void MainWindow::onClientIdReceived(const QString& id) {
+    myclientId = id;
+    qDebug() << "클라이언트 ID 할당됨:" << myclientId;
 }
 
 void MainWindow::handle_data(const uchar *data, int width, int height)

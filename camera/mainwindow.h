@@ -20,6 +20,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    QString myclientId; // 전역 멤버로 선언
+
 
 public slots:
     void handle_data(const uchar *data, int width, int height);
@@ -36,6 +38,9 @@ private:
     void yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb);
     uchar *image_buf;
     int front_index;
+
+private slots:
+    void onClientIdReceived(const QString& id);
 };
 
 #endif // MAINWINDOW_H
