@@ -1,5 +1,5 @@
-#ifndef CAMERASOUNDTHREAD_H
-#define CAMERASOUNDTHREAD_H
+#ifndef BGMSOUNDTHREAD_H
+#define BGMSOUNDTHREAD_H
 
 #include <QThread>
 #include <cstdlib>
@@ -8,13 +8,13 @@
 #include <QEventLoop>
 #include <QProcess>
 
-class CameraSoundThread : public QThread
+class BgmSoundThread : public QThread
 {
     Q_OBJECT
 
 public:
-    CameraSoundThread(QObject *parent = nullptr);
-    ~CameraSoundThread();
+    BgmSoundThread(QObject *parent = nullptr);
+    ~BgmSoundThread();
     void startMusic();
     void stopMusic();
 
@@ -25,4 +25,4 @@ private:
     QProcess *playProcess;
 };
 
-#endif // CAMERASOUNDTHREAD_H
+#endif // BGMSOUNDTHREAD_H

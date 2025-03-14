@@ -17,12 +17,16 @@ SOURCES += main.cpp\
     camerathread.cpp \
     udp_listener_thread.cpp \
     camerasoundplayer.cpp \
-    camerasoundthread.cpp
+    camerasoundthread.cpp \
+    bgmsoundplayer.cpp \
+    bgmsoundthread.cpp
 
 HEADERS  += mainwindow.h \
     camerathread.h \
     udp_listener_thread.h \
     camerasoundplayer.h \
-    camerasoundthread.h
+    camerasoundthread.h \
+    bgmsoundplayer.h \
+    bgmsoundthread.h
 
 FORMS    += mainwindow.ui

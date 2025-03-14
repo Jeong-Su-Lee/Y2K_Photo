@@ -2,6 +2,9 @@
 #define CAMERASOUNDPLAYER_H
 
 #include <QObject>
+#include <QProcess>
+#include "camerasoundthread.h"
+
 
 class CameraSoundPlayer : public QObject
 {
@@ -9,7 +12,13 @@ class CameraSoundPlayer : public QObject
 
 public:
     explicit CameraSoundPlayer(QObject *parent = nullptr);
-    void startCameraSound();
+    ~CameraSoundPlayer();
+    void startMusic();
+    void stopMusic();
+
+private:
+    void createNewThread();
+    CameraSoundThread *soundThread;
 };
 
 #endif // CAMERASOUNDPLAYER_H

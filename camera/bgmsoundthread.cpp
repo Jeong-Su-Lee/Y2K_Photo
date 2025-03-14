@@ -1,32 +1,32 @@
-#include "camerasoundthread.h"
+#include "bgmsoundthread.h"
 
 
-CameraSoundThread::CameraSoundThread(QObject *parent)
+BgmSoundThread::BgmSoundThread(QObject *parent)
     : QThread(parent), playProcess(new QProcess(this))
 {
 }
 
-CameraSoundThread::~CameraSoundThread()
+BgmSoundThread::~BgmSoundThread()
 {
     stopMusic();
     delete playProcess;
 }
 
-void CameraSoundThread::run()
+void BgmSoundThread::run()
 {
     exec();
 }
 
-void CameraSoundThread::startMusic()
+void BgmSoundThread::startMusic()
 {
     if (playProcess->state() == QProcess::Running) {
         playProcess->terminate();
         playProcess->waitForFinished();
     }
-    playProcess->start("sh", QStringList() << "-c" << "./aplay -Dhw:0,0 /mnt/nfs/test_contents/camera_capture_1.wav");
+    playProcess->start("sh", QStringList() << "-c" << "./aplay -Dhw:0,0 /mnt/nfs/test_contents/test.wav");
 }
 
-void CameraSoundThread::stopMusic()
+void BgmSoundThread::stopMusic()
 {
     if (playProcess->state() == QProcess::Running) {
         playProcess->terminate();

@@ -1,13 +1,12 @@
-#include "camerasoundplayer.h"
-#include "camerasoundthread.h"
+#include "bgmsoundplayer.h"
 
 
-CameraSoundPlayer::CameraSoundPlayer(QObject *parent)
+BgmSoundPlayer::BgmSoundPlayer(QObject *parent)
     : QObject(parent), soundThread(nullptr)
 {
 }
 
-CameraSoundPlayer::~CameraSoundPlayer()
+BgmSoundPlayer::~BgmSoundPlayer()
 {
     if (soundThread) {
         soundThread->stopMusic();
@@ -17,7 +16,7 @@ CameraSoundPlayer::~CameraSoundPlayer()
     }
 }
 
-void CameraSoundPlayer::createNewThread()
+void BgmSoundPlayer::createNewThread()
 {
     if (soundThread) {
         soundThread->stopMusic();
@@ -26,11 +25,11 @@ void CameraSoundPlayer::createNewThread()
         delete soundThread;
         soundThread = nullptr;
     }
-    soundThread = new CameraSoundThread(this);
+    soundThread = new BgmSoundThread(this);
     soundThread->start();
 }
 
-void CameraSoundPlayer::startMusic()
+void BgmSoundPlayer::startMusic()
 {
     if (!soundThread || soundThread->isFinished()) {
         createNewThread();
@@ -38,7 +37,7 @@ void CameraSoundPlayer::startMusic()
     soundThread->startMusic();
 }
 
-void CameraSoundPlayer::stopMusic()
+void BgmSoundPlayer::stopMusic()
 {
     if (soundThread) {
         soundThread->stopMusic();
