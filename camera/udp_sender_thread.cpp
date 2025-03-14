@@ -34,11 +34,11 @@ void SenderThread::run()
     QString prefix = "CAP0";
     if (clientId == "CLI1")
     {
-        prefix = "CAP1";
+        prefix = "IMG1";
     }
     else if (clientId == "CLI2")
     {
-        prefix = "CAP2";
+        prefix = "IMG2";
     }
 
     while (true) {
@@ -74,7 +74,7 @@ void SenderThread::run()
                 offset += chunkSize;
             }
 
-            udpSocket.writeDatagram("EOF", serverAddress, serverPort);
+            udpSocket.writeDatagram("EOFIMG", serverAddress, serverPort);
             qDebug() << "[SenderThread] 이미지 전송 완료";
         }
     }

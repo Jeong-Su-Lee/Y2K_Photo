@@ -265,6 +265,9 @@ int main() {
     char filename[100];
     FILE *fp = NULL;
     int receiving_image = 0;
+    char filename2[100];
+    FILE *fp2 = NULL;
+    int receiving_image2 = 0;
     Client clients[MAX_CLIENTS] = {0,};
     char header[5] = {0};
     // int flag = -1; // DEBUG 용 추후 수정
@@ -347,7 +350,7 @@ int main() {
             continue;
         }
         // "EOF" 수신 시 이미지 저장 종료
-        if (recv_len >= 3 && strncmp(buffer, "EOF", 3) == 0) {
+        if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
             count ++; // DEBUG 용 추후 수정
             printf("이미지 수신 완료! \n");
             if(count%2==0){// 왼쪽/오른쪽 수신
@@ -364,11 +367,17 @@ int main() {
                 combine_images(temp[0], temp[1],final,1);
                 broadcast_message_with_file(sockfd, clients, "final", final);
             }
-            if (fp) {
+            if (strncmp(buffer, "EOFCAP1", 6) == 0 && fp) {
                 fclose(fp);
                 fp = NULL;
+                receiving_image = 0;
             }
-            receiving_image = 0;
+            else if (strncmp(buffer, "EOFCAP2", 6) == 0 && fp2) {
+                fclose(fp2);
+                fp2 = NULL;
+                receiving_image2 = 0;
+            }
+            
             continue;
         }
 
@@ -410,19 +419,19 @@ int main() {
         else if (strncmp(header, "CAP2", 4) == 0)
         {
             // 저장: CAPn
-            if (!fp && !receiving_image) {
-                sprintf(filename, "img_client2_1.jpg"); // DEBUG 용 추후 수정
-                fp = fopen(filename, "wb");
-                if (!fp) {
+            if (!fp2 && !receiving_image2) {
+                sprintf(filename2, "img_client2_1.jpg"); // DEBUG 용 추후 수정
+                fp2 = fopen(filename2, "wb");
+                if (!fp2) {
                     perror("파일 열기 실패");
                     break;
                 }
-                printf("이미지 저장 시작합니다: %s\n", filename);
+                printf("이미지 저장 시작합니다: %s\n", filename2);
             }
-            receiving_image = 1;
-            if (fp)
+            receiving_image2 = 1;
+            if (fp2)
             {
-                fwrite(buffer + 4, 1, recv_len - 4, fp);
+                fwrite(buffer + 4, 1, recv_len - 4, fp2);
             }
         }
         else if (strncmp(header, "IMG", 3) == 0)

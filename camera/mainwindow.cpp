@@ -55,7 +55,8 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
 {
     //qDebug() << "handle_data" << data << width << height;
     yuyv2rgb(data, width, height, image_buf);
-    QPixmap pixmap = QPixmap::fromImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+    QImage image(image_buf, width, height, QImage::Format_RGB888);
+    QPixmap pixmap = QPixmap::fromImage(image);
     if(!overlay_pixmap.isNull()){
         QPainter painter(&pixmap);
         painter.setOpacity(0.5); // 0.0 ~1.0
@@ -65,10 +66,12 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
     if (myclientId == "CLI1")
     {
         ui->lblImg->setPixmap(pixmap);
+         senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
     }
     else if (myclientId == "CLI2")
     {
         ui->lblImg2->setPixmap(pixmap);
+         senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
     }
 
 }
@@ -155,13 +158,16 @@ void MainWindow::save_current_frame()
     QHostAddress serverAddress("192.168.10.2");
     quint16 serverPort = 25000;
     QString prefix = "CAP0";
+    QString prefix_eof = "EOFCAP0";
     if (myclientId == "CLI1")
     {
         prefix = "CAP1";
+        prefix_eof = "EOFCAP1";
     }
     else if (myclientId == "CLI2")
     {
         prefix = "CAP2";
+        prefix_eof = "EOFCAP2";
     }
     if (!image.isNull())
     {
@@ -185,7 +191,7 @@ void MainWindow::save_current_frame()
             offset += chunkSize;
         }
 
-        udpSocket.writeDatagram("EOF", serverAddress, serverPort);
+        udpSocket.writeDatagram(prefix_eof.toUtf8(), serverAddress, serverPort);
         qDebug() << "이미지 전송 완료";
     }
 }
