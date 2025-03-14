@@ -31,6 +31,23 @@ public:
     QLabel *label;
     QLabel *lblCount;
     QFrame *frame_4;
+    QGridLayout *gridLayout_2;
+    QLabel *lbl4;
+    QLabel *lbl2;
+    QLabel *lbl8;
+    QLabel *lbl9;
+    QLabel *lbl3;
+    QLabel *lbl7;
+    QLabel *lbl5;
+    QLabel *lbl12;
+    QLabel *lbl6;
+    QLabel *lbl11;
+    QLabel *lbl10;
+    QLabel *lbl1;
+    QLabel *lbl13;
+    QLabel *lbl14;
+    QLabel *lbl15;
+    QLabel *lbl16;
     QFrame *frame_5;
     QVBoxLayout *verticalLayout_2;
     QLabel *lblTime;
@@ -53,7 +70,7 @@ public:
         frame->setFrameShape(QFrame::StyledPanel);
         frame->setFrameShadow(QFrame::Raised);
         horizontalLayout = new QHBoxLayout(frame);
-        horizontalLayout->setSpacing(40);
+        horizontalLayout->setSpacing(360);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(-1, -1, -1, 9);
         frame_3 = new QFrame(frame);
@@ -86,9 +103,137 @@ public:
 
         frame_4 = new QFrame(frame);
         frame_4->setObjectName(QString::fromUtf8("frame_4"));
-        frame_4->setStyleSheet(QString::fromUtf8("border:none;"));
+        frame_4->setEnabled(false);
+        frame_4->setStyleSheet(QString::fromUtf8("border:1px black;"));
         frame_4->setFrameShape(QFrame::StyledPanel);
         frame_4->setFrameShadow(QFrame::Raised);
+        gridLayout_2 = new QGridLayout(frame_4);
+        gridLayout_2->setSpacing(0);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setContentsMargins(0, 0, 0, 0);
+        lbl4 = new QLabel(frame_4);
+        lbl4->setObjectName(QString::fromUtf8("lbl4"));
+        lbl4->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl4, 0, 3, 1, 1);
+
+        lbl2 = new QLabel(frame_4);
+        lbl2->setObjectName(QString::fromUtf8("lbl2"));
+        lbl2->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;\n"
+"background: #AEE1EF;"));
+
+        gridLayout_2->addWidget(lbl2, 0, 1, 1, 1);
+
+        lbl8 = new QLabel(frame_4);
+        lbl8->setObjectName(QString::fromUtf8("lbl8"));
+        lbl8->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl8, 1, 3, 1, 1);
+
+        lbl9 = new QLabel(frame_4);
+        lbl9->setObjectName(QString::fromUtf8("lbl9"));
+        lbl9->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl9, 2, 0, 1, 1);
+
+        lbl3 = new QLabel(frame_4);
+        lbl3->setObjectName(QString::fromUtf8("lbl3"));
+        lbl3->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl3, 0, 2, 1, 1);
+
+        lbl7 = new QLabel(frame_4);
+        lbl7->setObjectName(QString::fromUtf8("lbl7"));
+        lbl7->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl7, 1, 2, 1, 1);
+
+        lbl5 = new QLabel(frame_4);
+        lbl5->setObjectName(QString::fromUtf8("lbl5"));
+        lbl5->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl5, 1, 0, 1, 1);
+
+        lbl12 = new QLabel(frame_4);
+        lbl12->setObjectName(QString::fromUtf8("lbl12"));
+        lbl12->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl12, 2, 3, 1, 1);
+
+        lbl6 = new QLabel(frame_4);
+        lbl6->setObjectName(QString::fromUtf8("lbl6"));
+        lbl6->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl6, 1, 1, 1, 1);
+
+        lbl11 = new QLabel(frame_4);
+        lbl11->setObjectName(QString::fromUtf8("lbl11"));
+        lbl11->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl11, 2, 2, 1, 1);
+
+        lbl10 = new QLabel(frame_4);
+        lbl10->setObjectName(QString::fromUtf8("lbl10"));
+        lbl10->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;"));
+
+        gridLayout_2->addWidget(lbl10, 2, 1, 1, 1);
+
+        lbl1 = new QLabel(frame_4);
+        lbl1->setObjectName(QString::fromUtf8("lbl1"));
+        lbl1->setAutoFillBackground(false);
+        lbl1->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;\n"
+"border-bottom: 0;\n"
+"background: #AEE1EF;"));
+
+        gridLayout_2->addWidget(lbl1, 0, 0, 1, 1);
+
+        lbl13 = new QLabel(frame_4);
+        lbl13->setObjectName(QString::fromUtf8("lbl13"));
+        lbl13->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;"));
+
+        gridLayout_2->addWidget(lbl13, 3, 0, 1, 1);
+
+        lbl14 = new QLabel(frame_4);
+        lbl14->setObjectName(QString::fromUtf8("lbl14"));
+        lbl14->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;"));
+
+        gridLayout_2->addWidget(lbl14, 3, 1, 1, 1);
+
+        lbl15 = new QLabel(frame_4);
+        lbl15->setObjectName(QString::fromUtf8("lbl15"));
+        lbl15->setStyleSheet(QString::fromUtf8("border: 1px solid gray;\n"
+"border-right: 0;"));
+
+        gridLayout_2->addWidget(lbl15, 3, 2, 1, 1);
+
+        lbl16 = new QLabel(frame_4);
+        lbl16->setObjectName(QString::fromUtf8("lbl16"));
+        lbl16->setStyleSheet(QString::fromUtf8("border: 1px solid gray;"));
+
+        gridLayout_2->addWidget(lbl16, 3, 3, 1, 1);
+
 
         horizontalLayout->addWidget(frame_4);
 
@@ -112,7 +257,7 @@ public:
         horizontalLayout->addWidget(frame_5);
 
         horizontalLayout->setStretch(0, 1);
-        horizontalLayout->setStretch(1, 6);
+        horizontalLayout->setStretch(1, 1);
         horizontalLayout->setStretch(2, 1);
 
         verticalLayout->addWidget(frame);
@@ -150,6 +295,22 @@ public:
         PhotoWindow->setWindowTitle(QCoreApplication::translate("PhotoWindow", "Form", nullptr));
         label->setText(QCoreApplication::translate("PhotoWindow", "/8", nullptr));
         lblCount->setText(QCoreApplication::translate("PhotoWindow", "1", nullptr));
+        lbl4->setText(QString());
+        lbl2->setText(QString());
+        lbl8->setText(QString());
+        lbl9->setText(QString());
+        lbl3->setText(QString());
+        lbl7->setText(QString());
+        lbl5->setText(QString());
+        lbl12->setText(QString());
+        lbl6->setText(QString());
+        lbl11->setText(QString());
+        lbl10->setText(QString());
+        lbl1->setText(QString());
+        lbl13->setText(QString());
+        lbl14->setText(QString());
+        lbl15->setText(QString());
+        lbl16->setText(QString());
         lblTime->setText(QCoreApplication::translate("PhotoWindow", "59", nullptr));
         lblImg1->setText(QString());
         lblImage2->setText(QString());

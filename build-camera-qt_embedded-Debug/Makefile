@@ -1421,6 +1421,9 @@ moc_photowindow.cpp: ../camera/photowindow.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdatetime.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QDebug \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPixmap \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QLabel \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qframe.h \
 		../camera/camerathread.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QThread \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qthread.h \
@@ -2828,6 +2831,9 @@ photowindow.o: ../camera/photowindow.cpp ../camera/photowindow.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdatetime.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QDebug \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPixmap \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QLabel \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qframe.h \
 		../camera/camerathread.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QThread \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qthread.h \
@@ -2860,15 +2866,12 @@ photowindow.o: ../camera/photowindow.cpp ../camera/photowindow.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qguiapplication.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qinputmethod.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QFrame \
-		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qframe.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QGridLayout \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qgridlayout.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlayout.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlayoutitem.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qboxlayout.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QHBoxLayout \
-		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QLabel \
-		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QVBoxLayout \
 		../camera/endingwindow.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QString \

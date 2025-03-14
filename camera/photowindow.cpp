@@ -33,12 +33,72 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
     overlay_pixmap = QPixmap("/mnt/nfs/Guidline/guild_line_1.png");
 }
 
+
+void PhotoWindow::toggle_grid(QLabel *lbl){
+    QString styleSheet = lbl->styleSheet();
+    bool isBackgroundExist = styleSheet.split('\n').last().split(':').first() == "background";
+
+    if (isBackgroundExist) {
+        // remove background color
+        int lastNewlineIndex = styleSheet.lastIndexOf('\n');
+
+        if (lastNewlineIndex != -1) {
+            lbl->setStyleSheet(styleSheet.left(lastNewlineIndex));
+        }
+    } else {
+        lbl->setStyleSheet(styleSheet + "\nbackground: #AEE1EF;");
+    }
+}
+
 void PhotoWindow::rise_count(){
     int curCount = ui->lblCount->text().toInt();
 
-    if (curCount == 8) {
-        udp_listener->terminate();
-        return go_to_nextWindow();
+    switch (curCount) {
+        case 1:
+            toggle_grid(ui->lbl1);
+            toggle_grid(ui->lbl2);
+            toggle_grid(ui->lbl3);
+            toggle_grid(ui->lbl4);
+            break;
+        case 2:
+            toggle_grid(ui->lbl3);
+            toggle_grid(ui->lbl4);
+            toggle_grid(ui->lbl5);
+            toggle_grid(ui->lbl6);
+            break;
+        case 3:
+            toggle_grid(ui->lbl5);
+            toggle_grid(ui->lbl6);
+            toggle_grid(ui->lbl7);
+            toggle_grid(ui->lbl8);
+            break;
+        case 4:
+            toggle_grid(ui->lbl7);
+            toggle_grid(ui->lbl8);
+            toggle_grid(ui->lbl9);
+            toggle_grid(ui->lbl10);
+            break;
+        case 5:
+            toggle_grid(ui->lbl9);
+            toggle_grid(ui->lbl10);
+            toggle_grid(ui->lbl11);
+            toggle_grid(ui->lbl12);
+            break;
+        case 6:
+            toggle_grid(ui->lbl11);
+            toggle_grid(ui->lbl12);
+            toggle_grid(ui->lbl13);
+            toggle_grid(ui->lbl14);
+            break;
+        case 7:
+            toggle_grid(ui->lbl13);
+            toggle_grid(ui->lbl14);
+            toggle_grid(ui->lbl15);
+            toggle_grid(ui->lbl16);
+            break;
+        case 8:
+            udp_listener->terminate();
+            return go_to_nextWindow();
     }
 
     ui->lblCount->setText(QString::number(curCount+1));

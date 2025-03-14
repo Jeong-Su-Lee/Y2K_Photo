@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QPixmap>
+#include <QLabel>
 #include "camerathread.h"
 #include "udp_listener_thread.h"
 #include "camerasoundplayer.h"
@@ -36,6 +37,7 @@ private:
     QTimer *timer;
     QTimer *nextTimer;
     void rise_count();
+    void toggle_grid(QLabel *lbl);
 
     void sendImageToServer(const QString &filePath);
     CameraThread *camera;
