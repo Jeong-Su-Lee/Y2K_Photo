@@ -42,7 +42,7 @@ void* time_sender_thread(void *arg) {
         
         if (count == 0)
         {
-            broadcast_message(sockfd, clients, "capture");
+            broadcast_message(sockfd, clients, "CAPT");
             count = 9;
             shooting_count += 1;
         }
@@ -53,7 +53,7 @@ void* time_sender_thread(void *arg) {
         
         if (count == 0)
         {
-            broadcast_message(sockfd, clients, "capture");
+            broadcast_message(sockfd, clients, "CAPT");
             count = 9;
             shooting_count += 1;
         }
@@ -73,8 +73,7 @@ void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, 
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (clients[i].active) {
             // 우선 메시지 전송
-            sendto(sockfd, msg, strlen(msg), 0,
-                   (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+            sendto(sockfd, msg, strlen(msg), 0,(struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
 
             // 파일 열기
             FILE *fp = fopen(file_path, "rb");
@@ -263,8 +262,10 @@ int main() {
     int receiving_image2 = 0;
     Client clients[MAX_CLIENTS] = {0,};
     char header[5] = {0};
-     int count = 0;
+    int count = 0;
     char msg[MAX_MSG_LEN] = {0,};
+    int jpg_size = 0;
+    unsigned char *jpg_data = NULL;
 
 
     const char* img1 = "img_client1_1.jpg";
@@ -405,13 +406,31 @@ int main() {
                 fwrite(buffer + 4, 1, recv_len - 4, fp2);
             }
         }
-        else if (strncmp(header, "IMG", 3) == 0)
+        else if (strncmp(header, "IMG1", 4) == 0 || strncmp(buffer, "EOFIMG1", 7) == 0)
         {
-            // 바이패스: IMGn
+            if (strncmp(buffer, "EOFIMG1", 7) == 0)
+            {
+                sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[1].addr, sizeof(clients[1].addr));
+            }
+            else
+            {
+                jpg_size = recv_len - 4;
+                unsigned char *jpg_data = buffer + 4;
+                sendto(sockfd, jpg_data, jpg_size, 0,(struct sockaddr*)&clients[1].addr, sizeof(clients[1].addr));
+            }
         }
-        else if (strncmp(header, "IMG", 3) == 0)
+        else if (strncmp(header, "IMG2", 4) == 0 || strncmp(buffer, "EOFIMG2", 7) == 0)
         {
-            // 바이패스: IMGn
+            if (strncmp(buffer, "EOFIMG2", 7) == 0)
+            {
+                sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
+            }
+            else
+            {
+                jpg_size = recv_len - 4;
+                unsigned char *jpg_data = buffer + 4;
+                sendto(sockfd, jpg_data, jpg_size, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
+            }
         }
 
     }

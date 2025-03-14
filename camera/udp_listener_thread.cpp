@@ -1,6 +1,7 @@
 #include "udp_listener_thread.h"
 #include <QHostAddress>
 #include <QDebug>
+#include <QImage>
 
 #define SERVER_IP   "192.168.10.2"
 #define SERVER_PORT 25000
@@ -44,6 +45,7 @@ void UDPListenerThread::run()
     }
 
     qDebug() << "UDP 수신 대기 중... 포트:" << port;
+    incomingImageBuffer.clear();
 
     while (running) {
         if (udpSocket->waitForReadyRead(100)) {
@@ -51,16 +53,38 @@ void UDPListenerThread::run()
                 QByteArray datagram;
                 datagram.resize(int(udpSocket->pendingDatagramSize()));
                 udpSocket->readDatagram(datagram.data(), datagram.size());
-
-                qDebug() << "UDP 신호 수신됨: " << datagram;
-
                 // 신호 발생
                 if (datagram.startsWith("CLI")) {
                     emit clientIdReceived(QString::fromUtf8(datagram));  // 시그널로 MainWindow에 전달
                 }
-                if (QString(datagram).trimmed() == "capture"){
+                else if (QString(datagram).trimmed() == "CAPT"){
                     emit captureRequested();
                 }
+                else if (QString(datagram).startsWith("EOFIMG"))
+                {
+                    // 종료 패킷 도착
+                    receivingImage = false;
+                    qDebug() << "UDP IMG complete ";
+
+                    QImage image;
+                    if (image.loadFromData(incomingImageBuffer, "JPG")) {
+                        emit imageReceived(image); // MainWindow로 시그널 emit
+                    } else {
+                        qDebug() << "[UDP] 이미지 디코딩 실패";
+                    }
+                    incomingImageBuffer.clear();
+                }
+                else // if (datagram.startsWith("IMG"))
+                {
+                    // 시작 패킷
+//                    qDebug() << "UDP IMG recieve ";
+                    receivingImage = true;
+                    incomingImageBuffer.append(datagram); // "IMG1" 이후가 JPG 데이터
+                }
+
+//                qDebug() << "UDP 신호 수신됨: " << datagram;
+
+
             }
         }
     }

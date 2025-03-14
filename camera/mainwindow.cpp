@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     udp_listener->start();
 
+    connect(udp_listener, &UDPListenerThread::imageReceived, this, &MainWindow::displayReceivedImage);
+
 
 
     overlay_pixmap = QPixmap("/mnt/nfs/Guidline/guild_line_1.png");
@@ -30,6 +32,19 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::displayReceivedImage(const QImage &image) {
+    QPixmap pixmap = QPixmap::fromImage(image);
+    qDebug() << "UDP IMG Display ";
+    if (myclientId == "CLI1")
+    {
+        ui->lblImg2->setPixmap(pixmap);
+    }
+    else if (myclientId == "CLI2")
+    {
+        ui->lblImg->setPixmap(pixmap);
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -192,7 +207,7 @@ void MainWindow::save_current_frame()
         }
 
         udpSocket.writeDatagram(prefix_eof.toUtf8(), serverAddress, serverPort);
-        qDebug() << "이미지 전송 완료";
+        // qDebug() << "이미지 전송 완료";
     }
 }
 

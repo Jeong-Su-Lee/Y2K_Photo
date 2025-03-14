@@ -29,6 +29,7 @@ public:
 public slots:
     void handle_data(const uchar *data, int width, int height);
     void save_current_frame();
+    void displayReceivedImage(const QImage &image);
 
 private:
     void sendImageToServer(const QString &filePath);

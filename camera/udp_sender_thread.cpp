@@ -32,13 +32,16 @@ void SenderThread::run()
     QHostAddress serverAddress("192.168.10.2");
     quint16 serverPort = 25000;
     QString prefix = "CAP0";
+    QString prefix_EOFIMG = "EOFIMG0";
     if (clientId == "CLI1")
     {
         prefix = "IMG1";
+        prefix_EOFIMG = "EOFIMG1";
     }
     else if (clientId == "CLI2")
     {
         prefix = "IMG2";
+        prefix_EOFIMG = "EOFIMG2";
     }
 
     while (true) {
@@ -74,8 +77,8 @@ void SenderThread::run()
                 offset += chunkSize;
             }
 
-            udpSocket.writeDatagram("EOFIMG", serverAddress, serverPort);
-            qDebug() << "[SenderThread] 이미지 전송 완료";
+            udpSocket.writeDatagram(prefix_EOFIMG.toUtf8(), serverAddress, serverPort);
+//            qDebug() << "[SenderThread] 이미지 전송 완료";
         }
     }
 
