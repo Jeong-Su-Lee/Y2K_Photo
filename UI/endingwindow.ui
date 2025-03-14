@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EndingWindow</class>
+ <widget class="QWidget" name="EndingWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="btnEnding">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>470</y>
+     <width>146</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #009DFF;
+font: 16pt &quot;Noto Sans CJK KR&quot;;
+border-radius: 25px;
+color: white;
+border: none;
+outline: none;</string>
+   </property>
+   <property name="text">
+    <string>Exit... 9</string>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
