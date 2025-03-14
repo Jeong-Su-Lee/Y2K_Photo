@@ -11,8 +11,9 @@
 
 
 #define SERVER_PORT 25000
-#define BUF_SIZE 1024
+#define BUF_SIZE 2048
 #define MAX_CLIENTS 10
+int shooting_count = 0;
 
 
 typedef struct {
@@ -38,11 +39,17 @@ void* time_sender_thread(void *arg) {
         snprintf(time_buf, sizeof(time_buf), "%d", count);
         printf("Count 전송 : %d\n", count);
         broadcast_message(sockfd, clients, time_buf);
-               
-        if (count == 0) {
-                broadcast_message(sockfd, clients, "capture");
-                count = 9;
-            }
+        
+        if (count == 0)
+        {
+            broadcast_message(sockfd, clients, "capture");
+            count = 9;
+            shooting_count += 1;
+        }
+        if (shooting_count == 8)
+        {
+            break;
+        }
         sleep(1); // 1초마다 전송
         count -= 1;
     }
@@ -106,9 +113,13 @@ int main() {
     FILE *fp = NULL;
     int receiving_image = 0;
     Client clients[MAX_CLIENTS] = {0,};
-    int flag = -1; // DEBUG 용 추후 수정
-    int count = 0; // DEBUG 용 추후 수정
+    char header[5] = {0};
+    // int flag = -1; // DEBUG 용 추후 수정
+    // int count = 0; // DEBUG 용 추후 수정
     char msg[MAX_MSG_LEN] = {0,};
+    // uint8_t* image_buffer = malloc(1024 * 1024);
+    // size_t image_size = 0;
+
 
     // UDP 소켓 생성
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -134,17 +145,19 @@ int main() {
 
     int client_index = -1;
     while (1) {
-        ssize_t recv_len = recvfrom(sockfd, buffer, BUF_SIZE, 0,
-                                    (struct sockaddr*)&client_addr, &addr_len);
+        ssize_t recv_len = recvfrom(sockfd, buffer, BUF_SIZE, 0, (struct sockaddr*)&client_addr, &addr_len);
+
+        
         if (recv_len < 0) {
             perror("recvfrom 실패");
             break;
         }
-        buffer[recv_len] = '\0'; //메시지 끝 처리 
-        client_index = find_client(clients, &client_addr);
+        buffer[recv_len] = '\0'; //메시지 끝 처리
+        // client_index = find_client(clients, &client_addr);
+        memcpy(header, buffer, 4);
         // "hello" 수신 시 클라이언트 정보 저장 후 capture 명령 전송
-        if (recv_len >= 4 && strncmp(buffer, "CONN", 4) == 0) {
-            if(client_index == -1){
+        if (recv_len >= 4 && strncmp(header, "CONN", 4) == 0) {
+            if(find_client(clients, &client_addr) == -1){
                 add_client(clients,&client_addr); //클라이언트 추가   
                 client_index = find_client(clients, &client_addr);
                 sprintf(msg, "CLI%d", client_index + 1);
@@ -162,7 +175,7 @@ int main() {
             memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
             // sleep(1);  // 약간의 지연 후
             if(client_index == 1){ //연결이 둘다 됐다면 둘다 전송 
-                flag = 1; // DEBUG 용 추후 수정
+                // flag = 1; // DEBUG 용 추후 수정
                 if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
                 {
                     perror("타임 스레드 생성 실패");
@@ -179,36 +192,72 @@ int main() {
         // "EOF" 수신 시 이미지 저장 종료
         if (recv_len >= 3 && strncmp(buffer, "EOF", 3) == 0) {
             printf("이미지 수신 완료!\n");
-            count ++; // DEBUG 용 추후 수정
             if (fp) {
                 fclose(fp);
                 fp = NULL;
             }
             receiving_image = 0;
-            // sleep(3);  // 약간 텀을 주고
-            // broadcast_message(sockfd, clients, "capture");
             continue;
         }
 
         // 이미지 데이터 수신
-        // client_index = find_client(clients, &client_addr); DEBUG
-        // printf("[DEBUG] :  %d\n", client_index);
-        if (flag == 1) {    // 추후 수정
+        // if (flag == 1) {    // 추후 수정
+        //     if (!fp && !receiving_image) {
+        //         sprintf(filename, "image_%d.jpg", count); // DEBUG 용 추후 수정
+        //         fp = fopen(filename, "wb");
+        //         if (!fp) {
+        //             perror("파일 열기 실패");
+        //             break;
+        //         }
+        //         printf("이미지 저장 시작: %s\n", filename);
+        //         receiving_image = 1;
+        //     }
+
+        //     if (fp) {
+        //         fwrite(buffer, 1, recv_len, fp);
+        //     }
+        // }
+        if (strncmp(header, "CAP1", 4) == 0)
+        {
+            // 저장: CAPn
             if (!fp && !receiving_image) {
-                sprintf(filename, "image_%d.jpg", count); // DEBUG 용 추후 수정
+                sprintf(filename, "image_client1_%d.jpg", shooting_count); // DEBUG 용 추후 수정
                 fp = fopen(filename, "wb");
                 if (!fp) {
                     perror("파일 열기 실패");
                     break;
                 }
-                printf("이미지 저장 시작: %s\n", filename);
-                receiving_image = 1;
+                printf("이미지 저장 시작합니다: %s\n", filename);
             }
-
-            if (fp) {
-                fwrite(buffer, 1, recv_len, fp);
+            receiving_image = 1;
+            if (fp)
+            {
+                fwrite(buffer + 4, 1, recv_len - 4, fp);
             }
         }
+        else if (strncmp(header, "CAP2", 4) == 0)
+        {
+            // 저장: CAPn
+            if (!fp && !receiving_image) {
+                sprintf(filename, "image_client2_%d.jpg", shooting_count); // DEBUG 용 추후 수정
+                fp = fopen(filename, "wb");
+                if (!fp) {
+                    perror("파일 열기 실패");
+                    break;
+                }
+                printf("이미지 저장 시작합니다: %s\n", filename);
+            }
+            receiving_image = 1;
+            if (fp)
+            {
+                fwrite(buffer + 4, 1, recv_len - 4, fp);
+            }
+        }
+        else if (strncmp(header, "IMG", 3) == 0)
+        {
+            // 바이패스: IMGn
+        }
+
     }
 
     if (fp) fclose(fp);

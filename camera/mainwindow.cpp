@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     udp_listener->start();
 
+
+
     overlay_pixmap = QPixmap("/mnt/nfs/Guidline/guild_line_1.png");
 }
 
@@ -29,10 +31,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (senderThread) {
+        senderThread->stop();
+        senderThread->wait();  // 스레드가 안전하게 종료되도록 대기
+        delete senderThread;
+        senderThread = nullptr;
+    }
+
+    QMainWindow::closeEvent(event);  // 기본 종료 이벤트 호출
+}
 
 void MainWindow::onClientIdReceived(const QString& id) {
     myclientId = id;
     qDebug() << "클라이언트 ID 할당됨:" << myclientId;
+    senderThread = new SenderThread(myclientId, this);
+    senderThread->start();
 }
 
 void MainWindow::handle_data(const uchar *data, int width, int height)
@@ -122,38 +137,32 @@ void MainWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
     rgb[5] = (unsigned char)b;
 }
 
+
 void MainWindow::save_current_frame()
 {
-    QString filename = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz") + ".jpg";
     QImage image(image_buf, 640, 480, QImage::Format_RGB888);
-    mCameraSoundPlayer.startMusic();
-    if (image.save(filename,"JPG")) {
-        qDebug() << "이미지 저장됨:" << filename;
-        sendImageToServer(filename); // 여기서 전송
-    } else {
-        qDebug() << "이미지 저장 실패";
-    }
+    senderThread->enqueueImage(image);
 }
 
-void MainWindow::sendImageToServer(const QString& filePath)
-{
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "파일 열기 실패:" << filePath;
-        return;
-    }
+//void MainWindow::sendImageToServer(const QString& filePath)
+//{
+//    QFile file(filePath);
+//    if (!file.open(QIODevice::ReadOnly)) {
+//        qDebug() << "파일 열기 실패:" << filePath;
+//        return;
+//    }
 
-    QUdpSocket udpSender;
-    QByteArray buffer;
-    QHostAddress serverAddress("192.168.10.2"); // 서버 IP
-    quint16 serverPort = 25000;
+//    QUdpSocket udpSender;
+//    QByteArray buffer;
+//    QHostAddress serverAddress("192.168.10.2"); // 서버 IP
+//    quint16 serverPort = 25000;
 
-    while (!file.atEnd()) {
-        buffer = file.read(1024); // 1024 바이트씩 전송
-        udpSender.writeDatagram(buffer, serverAddress, serverPort);
-    }
-    udpSender.writeDatagram("EOF", serverAddress, serverPort);
-    file.close();
-    qDebug() << "이미지 전송 완료.";
-}
+//    while (!file.atEnd()) {
+//        buffer = file.read(1024); // 1024 바이트씩 전송
+//        udpSender.writeDatagram(buffer, serverAddress, serverPort);
+//    }
+//    udpSender.writeDatagram("EOF", serverAddress, serverPort);
+//    file.close();
+//    qDebug() << "이미지 전송 완료.";
+//}
 

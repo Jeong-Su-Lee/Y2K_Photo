@@ -5,9 +5,12 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QPixmap>
+#include <QCloseEvent>
+
 #include "camerathread.h"
 #include "udp_listener_thread.h"
 #include "camerasoundplayer.h"
+#include "udp_sender_thread.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +34,7 @@ private:
     void sendImageToServer(const QString &filePath);
     Ui::MainWindow *ui;
     CameraThread *camera;
+    SenderThread *senderThread;
     QPixmap overlay_pixmap;
     UDPListenerThread *udp_listener;
     CameraSoundPlayer mCameraSoundPlayer;
@@ -41,6 +45,9 @@ private:
 
 private slots:
     void onClientIdReceived(const QString& id);
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 };
 
 #endif // MAINWINDOW_H
