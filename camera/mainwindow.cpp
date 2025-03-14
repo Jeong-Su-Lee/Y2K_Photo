@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QUdpSocket>
 #include <QPainter>
+#include <QBuffer>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -61,8 +62,15 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
         painter.drawPixmap(0,0,overlay_pixmap); //draw guide line over frame
         painter.end();
     }
-    ui->lblImg->setPixmap(pixmap);
-    ui->lblImg2->setPixmap(pixmap);
+    if (myclientId == "CLI1")
+    {
+        ui->lblImg->setPixmap(pixmap);
+    }
+    else if (myclientId == "CLI2")
+    {
+        ui->lblImg2->setPixmap(pixmap);
+    }
+
 }
 
 bool MainWindow::yuyv2rgb(const uchar *yuyv, int width, int height, uchar *rgb)
@@ -141,7 +149,45 @@ void MainWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 void MainWindow::save_current_frame()
 {
     QImage image(image_buf, 640, 480, QImage::Format_RGB888);
-    senderThread->enqueueImage(image);
+    mCameraSoundPlayer.startMusic();
+    // senderThread->enqueueImage(image);
+    QUdpSocket udpSocket;
+    QHostAddress serverAddress("192.168.10.2");
+    quint16 serverPort = 25000;
+    QString prefix = "CAP0";
+    if (myclientId == "CLI1")
+    {
+        prefix = "CAP1";
+    }
+    else if (myclientId == "CLI2")
+    {
+        prefix = "CAP2";
+    }
+    if (!image.isNull())
+    {
+        QByteArray imageData;
+        QBuffer buffer(&imageData);
+        buffer.open(QIODevice::WriteOnly);
+        image.save(&buffer, "JPG");
+
+        int offset = 0;
+        const int chunkSize = 1024;
+        while (offset < imageData.size())
+        {
+            QByteArray chunk = imageData.mid(offset, chunkSize);
+
+            // 클라이언트 ID + 실제 데이터
+            QByteArray packet;
+            packet.append(prefix.toUtf8()); // ex: "CAP1"
+            packet.append(chunk);             // 이미지 일부
+
+            udpSocket.writeDatagram(packet, serverAddress, serverPort);
+            offset += chunkSize;
+        }
+
+        udpSocket.writeDatagram("EOF", serverAddress, serverPort);
+        qDebug() << "이미지 전송 완료";
+    }
 }
 
 //void MainWindow::sendImageToServer(const QString& filePath)
