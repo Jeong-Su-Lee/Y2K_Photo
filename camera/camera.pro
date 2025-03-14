@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     camerasoundplayer.cpp \
     camerasoundthread.cpp \
     bgmsoundplayer.cpp \
-    bgmsoundthread.cpp
+    bgmsoundthread.cpp \
+    udp_sender_thread.cpp
 
 HEADERS  += mainwindow.h \
     camerathread.h \
@@ -27,6 +28,7 @@ HEADERS  += mainwindow.h \
     camerasoundplayer.h \
     camerasoundthread.h \
     bgmsoundplayer.h \
-    bgmsoundthread.h
+    bgmsoundthread.h \
+    udp_sender_thread.h
 
 FORMS    += mainwindow.ui

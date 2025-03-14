@@ -429,6 +429,11 @@ int main() {
         {
             // 바이패스: IMGn
         }
+        else if (strncmp(header, "IMG", 3) == 0)
+        {
+            // 바이패스: IMGn
+        }
+
     }
 
     if (fp) fclose(fp);
