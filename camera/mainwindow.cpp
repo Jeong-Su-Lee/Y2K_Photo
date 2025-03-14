@@ -196,25 +196,3 @@ void MainWindow::save_current_frame()
     }
 }
 
-//void MainWindow::sendImageToServer(const QString& filePath)
-//{
-//    QFile file(filePath);
-//    if (!file.open(QIODevice::ReadOnly)) {
-//        qDebug() << "파일 열기 실패:" << filePath;
-//        return;
-//    }
-
-//    QUdpSocket udpSender;
-//    QByteArray buffer;
-//    QHostAddress serverAddress("192.168.10.2"); // 서버 IP
-//    quint16 serverPort = 25000;
-
-//    while (!file.atEnd()) {
-//        buffer = file.read(1024); // 1024 바이트씩 전송
-//        udpSender.writeDatagram(buffer, serverAddress, serverPort);
-//    }
-//    udpSender.writeDatagram("EOF", serverAddress, serverPort);
-//    file.close();
-//    qDebug() << "이미지 전송 완료.";
-//}
-

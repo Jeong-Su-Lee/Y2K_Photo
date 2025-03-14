@@ -66,6 +66,7 @@ void* time_sender_thread(void *arg) {
     }
     return NULL;
 }
+
 void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, const char *file_path) {
     char buffer[BUF_SIZE];
 
@@ -92,14 +93,6 @@ void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, 
         }
     }
 }
-// void send_capture_message (int sockfd, struct sockaddr_in client_addr)
-// {
-//     printf("클라이언트에 'capture' 명령 전송\n");
-//     printf("전송하는 클라이언트 정보 : %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-//     const char *capture_msg = "capture";
-//     sendto(sockfd, capture_msg, strlen(capture_msg), 0,
-//            (struct sockaddr*)&client_addr, sizeof(client_addr));
-// }
 
 void send_message (int sockfd, struct sockaddr_in client_addr, const char *msg)
 {
@@ -270,11 +263,9 @@ int main() {
     int receiving_image2 = 0;
     Client clients[MAX_CLIENTS] = {0,};
     char header[5] = {0};
-    // int flag = -1; // DEBUG 용 추후 수정
-     int count = 0; // DEBUG 용 추후 수정
+     int count = 0;
     char msg[MAX_MSG_LEN] = {0,};
-    // uint8_t* image_buffer = malloc(1024 * 1024);
-    // size_t image_size = 0;
+
 
     const char* img1 = "img_client1_1.jpg";
     const char* img2 = "img_client2_1.jpg";
@@ -313,9 +304,9 @@ int main() {
             break;
         }
         buffer[recv_len] = '\0'; //메시지 끝 처리
-        // client_index = find_client(clients, &client_addr);
+
         memcpy(header, buffer, 4);
-        // "hello" 수신 시 클라이언트 정보 저장 후 capture 명령 전송
+        // "CONN" 수신 시 클라이언트 정보 저장 후 capture 명령 전송
         if (recv_len >= 4 && strncmp(header, "CONN", 4) == 0) {
             if(find_client(clients, &client_addr) == -1){
                 add_client(clients,&client_addr); //클라이언트 추가   
@@ -333,9 +324,7 @@ int main() {
             struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
             args->sockfd = sockfd;
             memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
-            // sleep(1);  // 약간의 지연 후
-            if(client_index == 1){ //연결이 둘다 됐다면 둘다 전송 
-                // flag = 1; // DEBUG 용 추후 수정
+            if(client_index == 1){
                 if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
                 {
                     perror("타임 스레드 생성 실패");
@@ -345,13 +334,12 @@ int main() {
                 {
                     pthread_detach(tid); // 메모리 자동 회수
                 }
-                // broadcast_message(sockfd, clients, "capture");
             }
             continue;
         }
         // "EOF" 수신 시 이미지 저장 종료
         if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
-            count ++; // DEBUG 용 추후 수정
+            count ++;
             printf("이미지 수신 완료! \n");
             if(count%2==0){// 왼쪽/오른쪽 수신
                 if(count%4==0){
@@ -381,28 +369,11 @@ int main() {
             continue;
         }
 
-        // 이미지 데이터 수신
-        // if (flag == 1) {    // 추후 수정
-        //     if (!fp && !receiving_image) {
-        //         sprintf(filename, "image_%d.jpg", count); // DEBUG 용 추후 수정
-        //         fp = fopen(filename, "wb");
-        //         if (!fp) {
-        //             perror("파일 열기 실패");
-        //             break;
-        //         }
-        //         printf("이미지 저장 시작: %s\n", filename);
-        //         receiving_image = 1;
-        //     }
-
-        //     if (fp) {
-        //         fwrite(buffer, 1, recv_len, fp);
-        //     }
-        // }
         if (strncmp(header, "CAP1", 4) == 0)
         {
             // 저장: CAPn
             if (!fp && !receiving_image) {
-                sprintf(filename, "img_client1_1.jpg"); // DEBUG 용 추후 수정
+                sprintf(filename, "img_client1_1.jpg"); 
                 fp = fopen(filename, "wb");
                 if (!fp) {
                     perror("파일 열기 실패");
@@ -420,7 +391,7 @@ int main() {
         {
             // 저장: CAPn
             if (!fp2 && !receiving_image2) {
-                sprintf(filename2, "img_client2_1.jpg"); // DEBUG 용 추후 수정
+                sprintf(filename2, "img_client2_1.jpg");
                 fp2 = fopen(filename2, "wb");
                 if (!fp2) {
                     perror("파일 열기 실패");
