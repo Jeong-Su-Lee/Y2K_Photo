@@ -1,3 +1,4 @@
 #define SERVER_IP "192.168.10.2"
 #define CLIENT_IP "192.168.10.3"
+#define MAX_MSG_LEN 16
 #define SERVER_PORT 25000

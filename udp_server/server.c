@@ -6,12 +6,14 @@
 #include <time.h>
 #include <pthread.h>
 #include <jpeglib.h>
+#include "define.h"
 
 
 
 #define SERVER_PORT 25000
-#define BUF_SIZE 1024
+#define BUF_SIZE 2048
 #define MAX_CLIENTS 10
+int shooting_count = 0;
 
 
 typedef struct {
@@ -37,30 +39,78 @@ void* time_sender_thread(void *arg) {
         snprintf(time_buf, sizeof(time_buf), "%d", count);
         printf("Count 전송 : %d\n", count);
         broadcast_message(sockfd, clients, time_buf);
-               
-        if (count == 0) {
-                broadcast_message(sockfd, clients, "capture");
-                count = 9;
-            }
+        
+        if (count == 0)
+        {
+            broadcast_message(sockfd, clients, "capture");
+            count = 9;
+            shooting_count += 1;
+        }
+        if (shooting_count == 8)
+        {
+            break;
+        }
+        
+        if (count == 0)
+        {
+            broadcast_message(sockfd, clients, "capture");
+            count = 9;
+            shooting_count += 1;
+        }
+        if (shooting_count == 8)
+        {
+            break;
+        }
         sleep(1); // 1초마다 전송
         count -= 1;
     }
     return NULL;
 }
+void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, const char *file_path) {
+    char buffer[BUF_SIZE];
 
-void send_capture_message (int sockfd, struct sockaddr_in client_addr)
-{
-    printf("클라이언트에 'capture' 명령 전송\n");
-    printf("전송하는 클라이언트 정보 : %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-    const char *capture_msg = "capture";
-    sendto(sockfd, capture_msg, strlen(capture_msg), 0,
-           (struct sockaddr*)&client_addr, sizeof(client_addr));
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (clients[i].active) {
+            // 우선 메시지 전송
+            sendto(sockfd, msg, strlen(msg), 0,
+                   (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+
+            // 파일 열기
+            FILE *fp = fopen(file_path, "rb");
+            if (!fp) {
+                perror("파일 열기 실패");
+                return;
+            }
+
+            // 파일 내용 전송
+            size_t bytes_read;
+            while ((bytes_read = fread(buffer, 1, BUF_SIZE, fp)) > 0) {
+                sendto(sockfd, buffer, bytes_read, 0,
+                       (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+            }
+            fclose(fp);
+        }
+    }
 }
+// void send_capture_message (int sockfd, struct sockaddr_in client_addr)
+// {
+//     printf("클라이언트에 'capture' 명령 전송\n");
+//     printf("전송하는 클라이언트 정보 : %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+//     const char *capture_msg = "capture";
+//     sendto(sockfd, capture_msg, strlen(capture_msg), 0,
+//            (struct sockaddr*)&client_addr, sizeof(client_addr));
+// }
+
+void send_message (int sockfd, struct sockaddr_in client_addr, const char *msg)
+{
+    printf("전송하는 클라이언트 정보 : %s:%d msg : %s\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), msg);
+    sendto(sockfd, msg, strlen(msg), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
+}
+
 void broadcast_message(int sockfd, Client clients[], const char *msg) {
     for (int i = 0; i < 2; i++) {
         if (clients[i].active) {
-            sendto(sockfd, msg, strlen(msg), 0,
-                   (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+            sendto(sockfd, msg, strlen(msg), 0, (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
         }
     }
 }
@@ -89,7 +139,124 @@ int add_client(Client clients[], struct sockaddr_in *client_addr)
     printf("클라이언트 추가 실패: 최대 클라이언트 수 초과\n");
     return -1;
 }
+void combine_images(const char* img1_path, const char* img2_path, const char* output_path, int combine_type) {
+    struct jpeg_decompress_struct img1_info, img2_info;
+    struct jpeg_error_mgr err;
 
+    // 에러 핸들러 설정
+    img1_info.err = jpeg_std_error(&err);
+    img2_info.err = jpeg_std_error(&err);
+
+    // 이미지 파일 열기
+    FILE* img1_file = fopen(img1_path, "rb");
+    FILE* img2_file = fopen(img2_path, "rb");
+
+    if (!img1_file || !img2_file) {
+        printf("Error: Unable to open image files.\n");
+        return;
+    }
+
+    jpeg_create_decompress(&img1_info);
+    jpeg_create_decompress(&img2_info);
+
+    jpeg_stdio_src(&img1_info, img1_file);
+    jpeg_stdio_src(&img2_info, img2_file);
+
+    // 이미지 디코드
+    jpeg_read_header(&img1_info, TRUE);
+    jpeg_read_header(&img2_info, TRUE);
+
+    jpeg_start_decompress(&img1_info);
+    jpeg_start_decompress(&img2_info);
+
+    int width, height;
+    int channels = img1_info.output_components;
+
+    if (combine_type == 0) {
+        // 왼쪽-오른쪽 결합
+        if (img1_info.output_height != img2_info.output_height) {
+            printf("Error: Images must have the same height for horizontal combination.\n");
+            return;
+        }
+        width = img1_info.output_width + img2_info.output_width;
+        height = img1_info.output_height;
+    } else {
+        // 위-아래 결합
+        if (img1_info.output_width != img2_info.output_width) {
+            printf("Error: Images must have the same width for vertical combination.\n");
+            return;
+        }
+        width = img1_info.output_width;
+        height = img1_info.output_height + img2_info.output_height;
+    }
+
+    unsigned char* img1_row = (unsigned char*)malloc(img1_info.output_width * channels);
+    unsigned char* img2_row = (unsigned char*)malloc(img2_info.output_width * channels);
+    unsigned char* combined_row = (unsigned char*)malloc(width * channels);
+
+    FILE* output_file = fopen(output_path, "wb");
+    if (!output_file) {
+        printf("Error: Unable to create output image file.\n");
+        return;
+    }
+
+    struct jpeg_compress_struct out_info;
+    out_info.err = jpeg_std_error(&err);
+    jpeg_create_compress(&out_info);
+    jpeg_stdio_dest(&out_info, output_file);
+
+    // 출력 이미지 설정
+    out_info.image_width = width;
+    out_info.image_height = height;
+    out_info.input_components = channels;
+    out_info.in_color_space = img1_info.out_color_space;
+    jpeg_set_defaults(&out_info);
+    jpeg_start_compress(&out_info, TRUE);
+
+    // 이미지 결합
+    if (combine_type == 0) {
+        // 왼쪽-오른쪽 결합
+        while (img1_info.output_scanline < img1_info.output_height) {
+            jpeg_read_scanlines(&img1_info, &img1_row, 1);
+            jpeg_read_scanlines(&img2_info, &img2_row, 1);
+
+            // 결합
+            memcpy(combined_row, img1_row, img1_info.output_width * channels);
+            memcpy(combined_row + img1_info.output_width * channels, img2_row, img2_info.output_width * channels);
+
+            jpeg_write_scanlines(&out_info, &combined_row, 1);
+        }
+    } else {
+        // 위-아래 결합
+        while (img1_info.output_scanline < img1_info.output_height) {
+            jpeg_read_scanlines(&img1_info, &img1_row, 1);
+            jpeg_write_scanlines(&out_info, &img1_row, 1);
+        }
+        while (img2_info.output_scanline < img2_info.output_height) {
+            jpeg_read_scanlines(&img2_info, &img2_row, 1);
+            jpeg_write_scanlines(&out_info, &img2_row, 1);
+        }
+    }
+
+    // 정리 및 리소스 해제
+    jpeg_finish_decompress(&img1_info);
+    jpeg_finish_decompress(&img2_info);
+    jpeg_destroy_decompress(&img1_info);
+    jpeg_destroy_decompress(&img2_info);
+
+    jpeg_finish_compress(&out_info);
+    jpeg_destroy_compress(&out_info);
+
+    fclose(img1_file);
+    fclose(img2_file);
+    fclose(output_file);
+
+    free(img1_row);
+    free(img2_row);
+    free(combined_row);
+
+    printf("Images combined and saved as '%s'.\n", output_path);
+}
 int main() {
     int sockfd;
     struct sockaddr_in server_addr, client_addr;
@@ -98,10 +265,19 @@ int main() {
     char filename[100];
     FILE *fp = NULL;
     int receiving_image = 0;
-    Client clients[MAX_CLIENTS] = {0};
-    int flag = -1; // DEBUG 용 추후 수정
-    int count = 0; // DEBUG 용 추후 수정
+    Client clients[MAX_CLIENTS] = {0,};
+    char header[5] = {0};
+    // int flag = -1; // DEBUG 용 추후 수정
+     int count = 0; // DEBUG 용 추후 수정
+    char msg[MAX_MSG_LEN] = {0,};
+    // uint8_t* image_buffer = malloc(1024 * 1024);
+    // size_t image_size = 0;
 
+    const char* img1 = "img_client1_1.jpg";
+    const char* img2 = "img_client2_1.jpg";
+    const char* temp[] = {"temp1.jpg","temp2.jpg"};
+    const char* result[] = {"result_1.jpg","result_2.jpg","result_3.jpg","result_4.jpg"};
+    const char* final = "final.jpg";
     // UDP 소켓 생성
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0) {
@@ -126,32 +302,37 @@ int main() {
 
     int client_index = -1;
     while (1) {
-        ssize_t recv_len = recvfrom(sockfd, buffer, BUF_SIZE, 0,
-                                    (struct sockaddr*)&client_addr, &addr_len);
+        ssize_t recv_len = recvfrom(sockfd, buffer, BUF_SIZE, 0, (struct sockaddr*)&client_addr, &addr_len);
+
+        
         if (recv_len < 0) {
             perror("recvfrom 실패");
             break;
         }
-        buffer[recv_len] = '\0'; //메시지 끝 처리 
-        client_index = find_client(clients, &client_addr);
+        buffer[recv_len] = '\0'; //메시지 끝 처리
+        // client_index = find_client(clients, &client_addr);
+        memcpy(header, buffer, 4);
         // "hello" 수신 시 클라이언트 정보 저장 후 capture 명령 전송
-        if (recv_len >= 5 && strncmp(buffer, "hello", 5) == 0) {
-            if(client_index == -1){
+        if (recv_len >= 4 && strncmp(header, "CONN", 4) == 0) {
+            if(find_client(clients, &client_addr) == -1){
                 add_client(clients,&client_addr); //클라이언트 추가   
                 client_index = find_client(clients, &client_addr);
+                sprintf(msg, "CLI%d", client_index + 1);
+                clients[client_index].addr.sin_port = htons(SERVER_PORT);
+                sleep(1); // 충분한 설정시간 줌
+                send_message(sockfd, clients[client_index].addr, msg);
+
+                printf("클라이언트 추가됨: %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             }
             // client_found = 1;
-            printf("클라이언트 추가됨: %s:%d\n",
-                   inet_ntoa(client_addr.sin_addr),
-                   ntohs(client_addr.sin_port));
-            clients[client_index].addr.sin_port = htons(SERVER_PORT);
+            
             pthread_t tid;
             struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
             args->sockfd = sockfd;
             memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
             // sleep(1);  // 약간의 지연 후
             if(client_index == 1){ //연결이 둘다 됐다면 둘다 전송 
-                flag = 1; // DEBUG 용 추후 수정
+                // flag = 1; // DEBUG 용 추후 수정
                 if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
                 {
                     perror("타임 스레드 생성 실패");
@@ -167,36 +348,86 @@ int main() {
         }
         // "EOF" 수신 시 이미지 저장 종료
         if (recv_len >= 3 && strncmp(buffer, "EOF", 3) == 0) {
-            printf("이미지 수신 완료!\n");
             count ++; // DEBUG 용 추후 수정
+            printf("이미지 수신 완료! \n");
+            if(count%2==0){// 왼쪽/오른쪽 수신
+                if(count%4==0){
+                    combine_images(img1, img2, temp[1],0);
+                    combine_images(temp[0], temp[1],result[count/4-1],0);
+                }else{
+                    combine_images(img1, img2, temp[0],0);
+                }
+            }
+            if(count==16){ //촬영 완료 
+                combine_images(result[0], result[1], temp[0],1);
+                combine_images(result[2], result[3], temp[1],1);
+                combine_images(temp[0], temp[1],final,1);
+                broadcast_message_with_file(sockfd, clients, "final", final);
+            }
             if (fp) {
                 fclose(fp);
                 fp = NULL;
             }
             receiving_image = 0;
-            // sleep(3);  // 약간 텀을 주고
-            // broadcast_message(sockfd, clients, "capture");
             continue;
         }
 
         // 이미지 데이터 수신
-        // client_index = find_client(clients, &client_addr); DEBUG
-        // printf("[DEBUG] :  %d\n", client_index);
-        if (flag == 1) {    // 추후 수정
+        // if (flag == 1) {    // 추후 수정
+        //     if (!fp && !receiving_image) {
+        //         sprintf(filename, "image_%d.jpg", count); // DEBUG 용 추후 수정
+        //         fp = fopen(filename, "wb");
+        //         if (!fp) {
+        //             perror("파일 열기 실패");
+        //             break;
+        //         }
+        //         printf("이미지 저장 시작: %s\n", filename);
+        //         receiving_image = 1;
+        //     }
+
+        //     if (fp) {
+        //         fwrite(buffer, 1, recv_len, fp);
+        //     }
+        // }
+        if (strncmp(header, "CAP1", 4) == 0)
+        {
+            // 저장: CAPn
             if (!fp && !receiving_image) {
-                sprintf(filename, "image_%d.jpg", count); // DEBUG 용 추후 수정
+                sprintf(filename, "img_client1_1.jpg"); // DEBUG 용 추후 수정
                 fp = fopen(filename, "wb");
                 if (!fp) {
                     perror("파일 열기 실패");
                     break;
                 }
-                printf("이미지 저장 시작: %s\n", filename);
-                receiving_image = 1;
+                printf("이미지 저장 시작합니다: %s\n", filename);
             }
-
-            if (fp) {
-                fwrite(buffer, 1, recv_len, fp);
+            receiving_image = 1;
+            if (fp)
+            {
+                fwrite(buffer + 4, 1, recv_len - 4, fp);
             }
+        }
+        else if (strncmp(header, "CAP2", 4) == 0)
+        {
+            // 저장: CAPn
+            if (!fp && !receiving_image) {
+                sprintf(filename, "img_client2_1.jpg"); // DEBUG 용 추후 수정
+                fp = fopen(filename, "wb");
+                if (!fp) {
+                    perror("파일 열기 실패");
+                    break;
+                }
+                printf("이미지 저장 시작합니다: %s\n", filename);
+            }
+            receiving_image = 1;
+            if (fp)
+            {
+                fwrite(buffer + 4, 1, recv_len - 4, fp);
+            }
+        }
+        else if (strncmp(header, "IMG", 3) == 0)
+        {
+            // 바이패스: IMGn
         }
     }
 
