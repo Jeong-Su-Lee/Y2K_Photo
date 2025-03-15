@@ -356,12 +356,12 @@ int main() {
                 combine_images(temp[0], temp[1],final,1);
                 broadcast_message_with_file(sockfd, clients, "final", final);
             }
-            if (strncmp(buffer, "EOFCAP1", 6) == 0 && fp) {
+            if (strncmp(buffer, "EOFCAP1", 7) == 0 && fp) {
                 fclose(fp);
                 fp = NULL;
                 receiving_image = 0;
             }
-            else if (strncmp(buffer, "EOFCAP2", 6) == 0 && fp2) {
+            else if (strncmp(buffer, "EOFCAP2", 7) == 0 && fp2) {
                 fclose(fp2);
                 fp2 = NULL;
                 receiving_image2 = 0;

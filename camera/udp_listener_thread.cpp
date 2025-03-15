@@ -71,13 +71,13 @@ void UDPListenerThread::run()
                 {
                     // 종료 패킷 도착
                     receivingImage = false;
-                    qDebug() << "UDP IMG complete ";
+//                    qDebug() << "UDP IMG complete ";
 
                     QImage image;
                     if (image.loadFromData(incomingImageBuffer, "JPG")) {
                         emit imageReceived(image); // MainWindow로 시그널 emit
                     } else {
-                        qDebug() << "[UDP] 이미지 디코딩 실패";
+//                        qDebug() << "[UDP] 이미지 디코딩 실패";
                     }
                     incomingImageBuffer.clear();
                 }

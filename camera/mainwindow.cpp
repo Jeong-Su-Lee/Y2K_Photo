@@ -36,7 +36,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayReceivedImage(const QImage &image) {
     QPixmap pixmap = QPixmap::fromImage(image);
-    qDebug() << "UDP IMG Display ";
+//    qDebug() << "UDP IMG Display ";
     if (myclientId == "CLI1")
     {
         ui->lblImg2->setPixmap(pixmap);
