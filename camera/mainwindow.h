@@ -43,6 +43,7 @@ private:
     void yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb);
     uchar *image_buf;
     int front_index;
+    int number_of_guide =2;
 
 private slots:
     void onClientIdReceived(const QString& id);

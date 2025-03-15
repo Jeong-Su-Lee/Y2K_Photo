@@ -4,6 +4,7 @@
 #include <QUdpSocket>
 #include <QPainter>
 #include <QBuffer>
+#include <QString>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,10 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
     udp_listener->start();
 
     connect(udp_listener, &UDPListenerThread::imageReceived, this, &MainWindow::displayReceivedImage);
-
-
-
-    overlay_pixmap = QPixmap("/mnt/nfs/Guidline/guild_line_1.png");
 }
 
 MainWindow::~MainWindow()
@@ -64,6 +61,35 @@ void MainWindow::onClientIdReceived(const QString& id) {
     qDebug() << "클라이언트 ID 할당됨:" << myclientId;
     senderThread = new SenderThread(myclientId, this);
     senderThread->start();
+    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
+    if (myclientId == "CLI1"){
+        number_of_guide = 1;
+    }
+
+    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
+    QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
+    overlay_pixmap = QPixmap(filename);
+    QImage image = overlay_pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
+
+//    // 2. 알파 조절
+//    for (int y = 0; y < image.height(); ++y) {
+//        QRgb *line = reinterpret_cast<QRgb*>(image.scanLine(y));
+//        for (int x = 0; x < image.width(); ++x) {
+//            QColor color = QColor::fromRgba(line[x]);
+//            color.setAlphaF(color.alphaF() * 0.5); // 기존 알파에 비례
+//            line[x] = color.rgba();
+//        }
+//    }
+
+//    // 3. 다시 QPixmap으로 변환
+//    QPixmap overlay_pixmap = QPixmap::fromImage(image);
+//    if (myclientId == "CLI1"){
+//        ui->guideimg->setPixmap(overlay_pixmap);
+//    }
+//    else if(myclientId == "CLI2"){
+//        ui->guideimg2->setPixmap(overlay_pixmap);
+//    }
+
 }
 
 void MainWindow::handle_data(const uchar *data, int width, int height)
@@ -72,21 +98,15 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
     yuyv2rgb(data, width, height, image_buf);
     QImage image(image_buf, width, height, QImage::Format_RGB888);
     QPixmap pixmap = QPixmap::fromImage(image);
-    if(!overlay_pixmap.isNull()){
-        QPainter painter(&pixmap);
-        painter.setOpacity(0.5); // 0.0 ~1.0
-        painter.drawPixmap(0,0,overlay_pixmap); //draw guide line over frame
-        painter.end();
-    }
     if (myclientId == "CLI1")
     {
         ui->lblImg->setPixmap(pixmap);
-         senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+        senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
     }
     else if (myclientId == "CLI2")
     {
         ui->lblImg2->setPixmap(pixmap);
-         senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+        senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
     }
 
 }
@@ -209,5 +229,29 @@ void MainWindow::save_current_frame()
         udpSocket.writeDatagram(prefix_eof.toUtf8(), serverAddress, serverPort);
         // qDebug() << "이미지 전송 완료";
     }
+//    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
+//    number_of_guide += 2;
+//    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
+//    QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
+//    overlay_pixmap = QPixmap(filename);
+
+//    // 2. 알파 조절
+//    for (int y = 0; y < image.height(); ++y) {
+//        QRgb *line = reinterpret_cast<QRgb*>(image.scanLine(y));
+//        for (int x = 0; x < image.width(); ++x) {
+//            QColor color = QColor::fromRgba(line[x]);
+//            color.setAlphaF(color.alphaF() * 0.5); // 기존 알파에 비례
+//            line[x] = color.rgba();
+//        }
+//    }
+
+//    // 3. 다시 QPixmap으로 변환
+//    QPixmap overlay_pixmap = QPixmap::fromImage(image);
+//    if (myclientId == "CLI1"){
+//        ui->guideimg->setPixmap(overlay_pixmap);
+//    }
+//    else if(myclientId == "CLI2"){
+//        ui->guideimg2->setPixmap(overlay_pixmap);
+//    }
 }
 
