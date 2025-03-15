@@ -11,7 +11,7 @@
 
 
 #define SERVER_PORT 25000
-#define BUF_SIZE 4096
+#define BUF_SIZE 65540
 #define MAX_CLIENTS 10
 int shooting_count = 0;
 
