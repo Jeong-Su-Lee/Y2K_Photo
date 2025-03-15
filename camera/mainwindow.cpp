@@ -69,26 +69,26 @@ void MainWindow::onClientIdReceived(const QString& id) {
     QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
     QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
     overlay_pixmap = QPixmap(filename);
-    QImage image = overlay_pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
+    QImage image_overlay = overlay_pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
 
-//    // 2. 알파 조절
-//    for (int y = 0; y < image.height(); ++y) {
-//        QRgb *line = reinterpret_cast<QRgb*>(image.scanLine(y));
-//        for (int x = 0; x < image.width(); ++x) {
-//            QColor color = QColor::fromRgba(line[x]);
-//            color.setAlphaF(color.alphaF() * 0.5); // 기존 알파에 비례
-//            line[x] = color.rgba();
-//        }
-//    }
+    // 2. 알파 조절
+    for (int y = 0; y < image_overlay.height(); ++y) {
+        QRgb *line = reinterpret_cast<QRgb*>(image_overlay.scanLine(y));
+        for (int x = 0; x < image_overlay.width(); ++x) {
+            QColor color = QColor::fromRgba(line[x]);
+            color.setAlphaF(color.alphaF() * 0.5); // 기존 알파에 비례
+            line[x] = color.rgba();
+        }
+    }
 
-//    // 3. 다시 QPixmap으로 변환
-//    QPixmap overlay_pixmap = QPixmap::fromImage(image);
-//    if (myclientId == "CLI1"){
-//        ui->guideimg->setPixmap(overlay_pixmap);
-//    }
-//    else if(myclientId == "CLI2"){
-//        ui->guideimg2->setPixmap(overlay_pixmap);
-//    }
+    // 3. 다시 QPixmap으로 변환
+    QPixmap overlay_pixmap = QPixmap::fromImage(image_overlay);
+    if (myclientId == "CLI1"){
+        ui->guideimg->setPixmap(overlay_pixmap);
+    }
+    else if(myclientId == "CLI2"){
+        ui->guideimg2->setPixmap(overlay_pixmap);
+    }
 
 }
 
@@ -229,29 +229,30 @@ void MainWindow::save_current_frame()
         udpSocket.writeDatagram(prefix_eof.toUtf8(), serverAddress, serverPort);
         // qDebug() << "이미지 전송 완료";
     }
-//    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
-//    number_of_guide += 2;
-//    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
-//    QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
-//    overlay_pixmap = QPixmap(filename);
+    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
+    number_of_guide += 2;
+    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
+    QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
+    overlay_pixmap = QPixmap(filename);
+    QImage image_overlay = overlay_pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
 
-//    // 2. 알파 조절
-//    for (int y = 0; y < image.height(); ++y) {
-//        QRgb *line = reinterpret_cast<QRgb*>(image.scanLine(y));
-//        for (int x = 0; x < image.width(); ++x) {
-//            QColor color = QColor::fromRgba(line[x]);
-//            color.setAlphaF(color.alphaF() * 0.5); // 기존 알파에 비례
-//            line[x] = color.rgba();
-//        }
-//    }
+    // 2. 알파 조절
+    for (int y = 0; y < image_overlay.height(); ++y) {
+        QRgb *line = reinterpret_cast<QRgb*>(image_overlay.scanLine(y));
+        for (int x = 0; x < image_overlay.width(); ++x) {
+            QColor color = QColor::fromRgba(line[x]);
+            color.setAlphaF(color.alphaF() * 0.5); // 기존 알파에 비례
+            line[x] = color.rgba();
+        }
+    }
 
-//    // 3. 다시 QPixmap으로 변환
-//    QPixmap overlay_pixmap = QPixmap::fromImage(image);
-//    if (myclientId == "CLI1"){
-//        ui->guideimg->setPixmap(overlay_pixmap);
-//    }
-//    else if(myclientId == "CLI2"){
-//        ui->guideimg2->setPixmap(overlay_pixmap);
-//    }
+    // 3. 다시 QPixmap으로 변환
+    QPixmap overlay_pixmap = QPixmap::fromImage(image_overlay);
+    if (myclientId == "CLI1"){
+        ui->guideimg->setPixmap(overlay_pixmap);
+    }
+    else if(myclientId == "CLI2"){
+        ui->guideimg2->setPixmap(overlay_pixmap);
+    }
 }
 
