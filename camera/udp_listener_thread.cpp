@@ -66,19 +66,25 @@ void UDPListenerThread::run()
                     // 시간 받아서 화면에 띄워주는 함수로 분기 필요
                     continue;
                 }
+                // 마지막이므로 카메라 끄고, 이미지 받을 준비함
+                else if (QString(datagram).trimmed() == "FINAL"){
+                    continue;
+                }
                 // 이미지 스트림 마지막 부분 받아서 화면에 띄워줌
                 else if (QString(datagram).startsWith("EOFIMG"))
                 {
                     // 종료 패킷 도착
-                    receivingImage = false;
+
 //                    qDebug() << "UDP IMG complete ";
 
                     QImage image;
+
                     if (image.loadFromData(incomingImageBuffer, "JPG")) {
                         emit imageReceived(image); // MainWindow로 시그널 emit
                     } else {
 //                        qDebug() << "[UDP] 이미지 디코딩 실패";
                     }
+                    receivingImage = false;
                     incomingImageBuffer.clear();
                 }
                 // 헤더 정보 없을 시, 이미지로 판단해서, 이미지 버퍼에 저장함.

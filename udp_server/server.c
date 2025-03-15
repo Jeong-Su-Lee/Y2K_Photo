@@ -11,7 +11,7 @@
 
 
 #define SERVER_PORT 25000
-#define BUF_SIZE 2048
+#define BUF_SIZE 4096
 #define MAX_CLIENTS 10
 int shooting_count = 0;
 
@@ -298,7 +298,6 @@ int main() {
     int client_index = -1;
     while (1) {
         ssize_t recv_len = recvfrom(sockfd, buffer, BUF_SIZE, 0, (struct sockaddr*)&client_addr, &addr_len);
-
         
         if (recv_len < 0) {
             perror("recvfrom 실패");
@@ -340,6 +339,16 @@ int main() {
         }
         // "EOF" 수신 시 이미지 저장 종료
         if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
+            if (strncmp(buffer, "EOFCAP1", 7) == 0 && fp) {
+                fclose(fp);
+                fp = NULL;
+                receiving_image = 0;
+            }
+            else if (strncmp(buffer, "EOFCAP2", 7) == 0 && fp2) {
+                fclose(fp2);
+                fp2 = NULL;
+                receiving_image2 = 0;
+            }
             count ++;
             printf("이미지 수신 완료! \n");
             if(count%2==0){// 왼쪽/오른쪽 수신
@@ -356,17 +365,6 @@ int main() {
                 combine_images(temp[0], temp[1],final,1);
                 broadcast_message_with_file(sockfd, clients, "final", final);
             }
-            if (strncmp(buffer, "EOFCAP1", 7) == 0 && fp) {
-                fclose(fp);
-                fp = NULL;
-                receiving_image = 0;
-            }
-            else if (strncmp(buffer, "EOFCAP2", 7) == 0 && fp2) {
-                fclose(fp2);
-                fp2 = NULL;
-                receiving_image2 = 0;
-            }
-            
             continue;
         }
 
