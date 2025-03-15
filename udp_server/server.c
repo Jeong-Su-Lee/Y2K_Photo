@@ -36,8 +36,8 @@ void* time_sender_thread(void *arg) {
 
     char time_buf[100];
     while (1) {
-        snprintf(time_buf, sizeof(time_buf), "%d", count);
-        printf("Count 전송 : %d\n", count);
+        snprintf(time_buf, sizeof(time_buf), "CNT%d", count);
+        printf("Count 전송 : %s\n", time_buf);
         broadcast_message(sockfd, clients, time_buf);
         
         if (count == 0)

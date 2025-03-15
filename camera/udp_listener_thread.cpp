@@ -53,13 +53,20 @@ void UDPListenerThread::run()
                 QByteArray datagram;
                 datagram.resize(int(udpSocket->pendingDatagramSize()));
                 udpSocket->readDatagram(datagram.data(), datagram.size());
-                // 신호 발생
+                // Client 번호 받음
                 if (datagram.startsWith("CLI")) {
                     emit clientIdReceived(QString::fromUtf8(datagram));  // 시그널로 MainWindow에 전달
                 }
+                // Capture 신호 받아서 사진 저장
                 else if (QString(datagram).trimmed() == "CAPT"){
                     emit captureRequested();
                 }
+                // 남은 시간 받는 부분
+                else if (datagram.startsWith("CNT")) {
+                    // 시간 받아서 화면에 띄워주는 함수로 분기 필요
+                    continue;
+                }
+                // 이미지 스트림 마지막 부분 받아서 화면에 띄워줌
                 else if (QString(datagram).startsWith("EOFIMG"))
                 {
                     // 종료 패킷 도착
@@ -74,6 +81,7 @@ void UDPListenerThread::run()
                     }
                     incomingImageBuffer.clear();
                 }
+                // 헤더 정보 없을 시, 이미지로 판단해서, 이미지 버퍼에 저장함.
                 else // if (datagram.startsWith("IMG"))
                 {
                     // 시작 패킷
