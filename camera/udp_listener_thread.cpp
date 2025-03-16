@@ -1,6 +1,8 @@
 #include "udp_listener_thread.h"
 #include <QHostAddress>
 #include <QDebug>
+#include <QImage>
+#include <QFile>
 
 #define SERVER_IP   "192.168.10.2"
 #define SERVER_PORT 25000
@@ -10,7 +12,7 @@ UDPListenerThread::UDPListenerThread(QObject *parent)
 {
     udpSocket = new QUdpSocket(this);
 
-    QByteArray datagram = "hello";
+    QByteArray datagram = "CONN";
     QHostAddress targetIp("192.168.10.2");
     quint16 targetPort = 25000;
 
@@ -44,6 +46,10 @@ void UDPListenerThread::run()
     }
 
     qDebug() << "UDP 수신 대기 중... 포트:" << port;
+    incomingImageBuffer.clear();
+    QFile file("/mnt/nfs/final.jpg");
+    QByteArray FinalimageBuffer;
+    bool receivingFinalImage = false;
 
     while (running) {
         if (udpSocket->waitForReadyRead(100)) {
@@ -51,13 +57,77 @@ void UDPListenerThread::run()
                 QByteArray datagram;
                 datagram.resize(int(udpSocket->pendingDatagramSize()));
                 udpSocket->readDatagram(datagram.data(), datagram.size());
-
-                qDebug() << "UDP 신호 수신됨: " << datagram;
-
-                // 신호 발생
-                if (QString(datagram).trimmed() == "capture"){
+                // Client 번호 받음
+                if (datagram.startsWith("CLI")) {
+                    emit clientIdReceived(QString::fromUtf8(datagram));  // 시그널로 MainWindow에 전달
+                }
+                // Capture 신호 받아서 사진 저장
+                else if (QString(datagram).trimmed() == "CAPT"){
                     emit captureRequested();
                 }
+                // 남은 시간 받는 부분
+                else if (datagram.startsWith("CNT")) {
+                    // 시간 받아서 화면에 띄워주는 함수로 분기 필요
+                    continue;
+                }
+                // 마지막이므로 카메라 끄고, 이미지 받을 준비함
+                if (datagram.startsWith("FINIMG")) {
+                    if (!receivingFinalImage) {
+                        // Only clear the buffer when starting to receive a new image
+                        receivingFinalImage = true;
+                        FinalimageBuffer.clear();
+                        qDebug() << "[클라] FINALIMAGE 수신 시작";
+                    }
+                    qDebug() << "[클라] FINALIMAGE 수신 중";
+                    FinalimageBuffer.append(datagram.mid(6));
+                }
+                else if (QString(datagram) == "EOFFIN") {
+                    if (receivingFinalImage) {
+                        QImage Finalimage;
+                        QString filename = "/mnt/nfs/final.jpg"; // 추후 경로 수정 필요
+                        if (Finalimage.loadFromData(FinalimageBuffer)) {
+                            if (Finalimage.save(filename, "JPG")) {
+                                qDebug() << "[클라이언트] 이미지 저장 성공:" << filename;
+                            } else {
+                                qDebug() << "[클라이언트] 이미지 저장 실패";
+                            }
+                        } else {
+                            qDebug() << "[클라이언트] QImage로 변환 실패!";
+                        }
+
+                        FinalimageBuffer.clear();
+                        receivingFinalImage = false;
+                    }
+                }
+                // 이미지 스트림 마지막 부분 받아서 화면에 띄워줌
+                else if (QString(datagram).startsWith("EOFIMG"))
+                {
+                    // 종료 패킷 도착
+
+//                    qDebug() << "UDP IMG complete ";
+
+                    QImage image;
+
+                    if (image.loadFromData(incomingImageBuffer, "JPG")) {
+                        emit imageReceived(image); // MainWindow로 시그널 emit
+                    } else {
+//                        qDebug() << "[UDP] 이미지 디코딩 실패";
+                    }
+                    receivingImage = false;
+                    incomingImageBuffer.clear();
+                }
+                // 헤더 정보 없을 시, 이미지로 판단해서, 이미지 버퍼에 저장함.
+                else if (datagram.startsWith("IMG"))
+                {
+                    // 시작 패킷
+//                    qDebug() << "UDP IMG recieve ";
+                    receivingImage = true;
+                    incomingImageBuffer.append(datagram.mid(4)); // "IMG1" 이후가 JPG 데이터
+                }
+
+//                qDebug() << "UDP 신호 수신됨: " << datagram;
+
+
             }
         }
     }

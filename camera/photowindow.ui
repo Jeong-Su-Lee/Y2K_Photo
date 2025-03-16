@@ -359,22 +359,82 @@ font-weight: 400;</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="lblImg1">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lblImage2">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QLabel" name="lblImg">
+      <property name="geometry">
+       <rect>
+        <x>45</x>
+        <y>68</y>
+        <width>425</width>
+        <height>325</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>425</width>
+        <height>325</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>425</width>
+        <height>325</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblImg2">
+      <property name="geometry">
+       <rect>
+        <x>512</x>
+        <y>68</y>
+        <width>425</width>
+        <height>325</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>425</width>
+        <height>325</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>425</width>
+        <height>325</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="guideimg">
+      <property name="geometry">
+       <rect>
+        <x>45</x>
+        <y>68</y>
+        <width>425</width>
+        <height>325</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="guideimg2">
+      <property name="geometry">
+       <rect>
+        <x>521</x>
+        <y>68</y>
+        <width>425</width>
+        <height>325</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>

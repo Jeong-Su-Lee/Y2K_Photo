@@ -13,7 +13,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    mainwindow.cpp \
     camerathread.cpp \
     udp_listener_thread.cpp \
     camerasoundplayer.cpp \
@@ -26,9 +25,10 @@ SOURCES += main.cpp\
     photowindow.cpp \
     secondwindow.cpp \
     imagedecoration.cpp \
-    imagefilter.cpp
+    imagefilter.cpp \
+    udp_sender_thread.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     camerathread.h \
     udp_listener_thread.h \
     camerasoundplayer.h \
@@ -41,9 +41,10 @@ HEADERS  += mainwindow.h \
     photowindow.h \
     secondwindow.h \
     imagedecoration.h \
-    imagefilter.h
+    imagefilter.h \
+    udp_sender_thread.h
 
-FORMS    += mainwindow.ui \
+FORMS    += \
     endingwindow.ui \
     firstwindow.ui \
     guideselectwindow.ui \

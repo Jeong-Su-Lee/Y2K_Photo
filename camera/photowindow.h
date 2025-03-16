@@ -8,6 +8,7 @@
 #include <QLabel>
 #include "camerathread.h"
 #include "udp_listener_thread.h"
+#include "udp_sender_thread.h"
 #include "camerasoundplayer.h"
 
 #define TIME_LIMIT 8
@@ -23,6 +24,7 @@ class PhotoWindow : public QWidget
 public:
     explicit PhotoWindow(QWidget *parent = 0);
     ~PhotoWindow();
+    QString myclientId; // 전역 멤버로 선언
 
 
 private slots:
@@ -30,6 +32,7 @@ private slots:
     void go_to_nextWindow();
     void handle_data(const uchar *data, int width, int height);
     void save_current_frame();
+    void displayReceivedImage(const QImage &image);
 
 
 private:
@@ -41,6 +44,7 @@ private:
 
     void sendImageToServer(const QString &filePath);
     CameraThread *camera;
+    SenderThread *senderThread;
     QPixmap overlay_pixmap;
     UDPListenerThread *udp_listener;
     CameraSoundPlayer mCameraSoundPlayer;
@@ -48,6 +52,14 @@ private:
     void yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb);
     uchar *image_buf;
     int front_index;
+    int number_of_guide =2;
+
+private slots:
+    void onClientIdReceived(const QString& id);
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
+
 };
 
 #endif // PHOTOWINDOW_H
