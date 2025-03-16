@@ -6,13 +6,16 @@
 #include <time.h>
 #include <pthread.h>
 #include <jpeglib.h>
+#include <errno.h>
 #include "define.h"
 
 
 
 #define SERVER_PORT 25000
-#define BUF_SIZE 65540
+#define BUF_SIZE 32768
 #define MAX_CLIENTS 10
+#define FINAL_HEADER "FINIMG"
+#define FINAL_HEADER_LEN 6 
 int shooting_count = 0;
 
 
@@ -67,31 +70,48 @@ void* time_sender_thread(void *arg) {
     return NULL;
 }
 
-void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, const char *file_path) {
+void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, const char *file_path) 
+{
     char buffer[BUF_SIZE];
+    unsigned char send_buffer[BUF_SIZE];  // 헤더 + 실제 데이터
 
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (clients[i].active) {
             // 우선 메시지 전송
-            sendto(sockfd, msg, strlen(msg), 0,(struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+            size_t bytes_read;
 
-            // 파일 열기
             FILE *fp = fopen(file_path, "rb");
             if (!fp) {
                 perror("파일 열기 실패");
                 return;
             }
-
-            // 파일 내용 전송
-            size_t bytes_read;
-            while ((bytes_read = fread(buffer, 1, BUF_SIZE, fp)) > 0) {
-                sendto(sockfd, buffer, bytes_read, 0,
-                       (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+            
+            while ((bytes_read = fread(buffer, 1, BUF_SIZE - FINAL_HEADER_LEN, fp)) > 0) {
+                // 헤더를 먼저 넣고
+                memcpy(send_buffer, FINAL_HEADER, FINAL_HEADER_LEN);
+                // 그 뒤에 이미지 데이터 붙이기
+                memcpy(send_buffer + FINAL_HEADER_LEN, buffer, bytes_read);
+            
+                // 총 전송할 길이 = 헤더 + 데이터
+                size_t send_len = FINAL_HEADER_LEN + bytes_read;
+            
+                if(sendto(sockfd, send_buffer, send_len, 0,(struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr)) == -1){
+                    printf("Connection Error: %d (%s)\n", errno, strerror(errno));
+                }
+                else{
+                    printf("success\n");
+                }
             }
+            
             fclose(fp);
+            
+            // 이미지 전송 끝났으면 EOF 패킷 전송
+            sendto(sockfd, "EOFFIN", 6, 0, (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
+            
         }
     }
 }
+
 
 void send_message (int sockfd, struct sockaddr_in client_addr, const char *msg)
 {

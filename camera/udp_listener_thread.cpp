@@ -2,6 +2,7 @@
 #include <QHostAddress>
 #include <QDebug>
 #include <QImage>
+#include <QFile>
 
 #define SERVER_IP   "192.168.10.2"
 #define SERVER_PORT 25000
@@ -46,6 +47,9 @@ void UDPListenerThread::run()
 
     qDebug() << "UDP 수신 대기 중... 포트:" << port;
     incomingImageBuffer.clear();
+    QFile file("/mnt/nfs/final.jpg");
+    QByteArray FinalimageBuffer;
+    bool receivingFinalImage = false;
 
     while (running) {
         if (udpSocket->waitForReadyRead(100)) {
@@ -67,8 +71,33 @@ void UDPListenerThread::run()
                     continue;
                 }
                 // 마지막이므로 카메라 끄고, 이미지 받을 준비함
-                else if (QString(datagram).trimmed() == "FINAL"){
-                    continue;
+                if (datagram.startsWith("FINIMG")) {
+                    if (!receivingFinalImage) {
+                        // Only clear the buffer when starting to receive a new image
+                        receivingFinalImage = true;
+                        FinalimageBuffer.clear();
+                        qDebug() << "[클라] FINALIMAGE 수신 시작";
+                    }
+                    qDebug() << "[클라] FINALIMAGE 수신 중";
+                    FinalimageBuffer.append(datagram.mid(6));
+                }
+                else if (QString(datagram) == "EOFFIN") {
+                    if (receivingFinalImage) {
+                        QImage Finalimage;
+                        QString filename = "/mnt/nfs/final.jpg"; // 추후 경로 수정 필요
+                        if (Finalimage.loadFromData(FinalimageBuffer)) {
+                            if (Finalimage.save(filename, "JPG")) {
+                                qDebug() << "[클라이언트] 이미지 저장 성공:" << filename;
+                            } else {
+                                qDebug() << "[클라이언트] 이미지 저장 실패";
+                            }
+                        } else {
+                            qDebug() << "[클라이언트] QImage로 변환 실패!";
+                        }
+
+                        FinalimageBuffer.clear();
+                        receivingFinalImage = false;
+                    }
                 }
                 // 이미지 스트림 마지막 부분 받아서 화면에 띄워줌
                 else if (QString(datagram).startsWith("EOFIMG"))
