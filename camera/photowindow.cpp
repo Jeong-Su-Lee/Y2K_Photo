@@ -1,6 +1,7 @@
 #include "photowindow.h"
 #include "ui_photowindow.h"
 #include "endingwindow.h"
+#include "imagefilter.h"
 #include <QString>
 #include <QFile>
 #include <QUdpSocket>
@@ -117,11 +118,12 @@ void PhotoWindow::change_timeText()
 
 void PhotoWindow::go_to_nextWindow()
 {
-    EndingWindow *endingWindow = new EndingWindow();
+    ImageFilter *imageFilter = new ImageFilter();
     this->hide();
-    endingWindow->show();
+    imageFilter->show();
 
     timer->stop();
+    camera->setExitFlag();
 }
 
 
@@ -130,11 +132,6 @@ PhotoWindow::~PhotoWindow()
     delete ui;
     delete timer;
     delete nextTimer;
-
-    delete camera;
-    delete &overlay_pixmap;
-    delete udp_listener;
-    delete &mCameraSoundPlayer;
 }
 
 

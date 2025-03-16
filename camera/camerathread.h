@@ -17,6 +17,7 @@ class CameraThread : public QThread
 
 public:
     CameraThread(QObject *parent = 0);
+    void setExitFlag();
 
 signals:
     void send_data(const uchar *, int, int);
@@ -41,9 +42,11 @@ protected:
 
     void vidioc_enuminput(int fd);
 
+
 private:
     unsigned int frame_count;
     int frame_devisor;
+    bool exitFlag;
 
     int initCapture();
     int startCapture();

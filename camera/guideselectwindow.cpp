@@ -1,7 +1,7 @@
 #include "guideselectwindow.h"
 #include "ui_guideselectwindow.h"
 #include "photowindow.h"
-#include "mainwindow.h" // merge with camera
+#include "imagefilter.h"
 
 GuideSelectWindow::GuideSelectWindow(QWidget *parent) :
     QWidget(parent),
@@ -19,9 +19,9 @@ void GuideSelectWindow::go_to_nextWindow()
     PhotoWindow *photoWindow = new PhotoWindow();
     this->hide();
     photoWindow->show();
-//    MainWindow *mainWindow = new MainWindow();
+//    ImageFilter *imageFilter = new ImageFilter();
 //    this->hide();
-//    mainWindow->show();
+//    imageFilter->show();
 
     timer->stop();
 }

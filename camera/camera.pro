@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     firstwindow.cpp \
     guideselectwindow.cpp \
     photowindow.cpp \
-    secondwindow.cpp
+    secondwindow.cpp \
+    imagedecoration.cpp \
+    imagefilter.cpp
 
 HEADERS  += mainwindow.h \
     camerathread.h \
@@ -37,7 +39,9 @@ HEADERS  += mainwindow.h \
     firstwindow.h \
     guideselectwindow.h \
     photowindow.h \
-    secondwindow.h
+    secondwindow.h \
+    imagedecoration.h \
+    imagefilter.h
 
 FORMS    += mainwindow.ui \
     endingwindow.ui \

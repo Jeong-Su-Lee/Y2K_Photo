@@ -64,7 +64,9 @@ SOURCES       = ../camera/main.cpp \
 		../camera/firstwindow.cpp \
 		../camera/guideselectwindow.cpp \
 		../camera/photowindow.cpp \
-		../camera/secondwindow.cpp qrc_images.cpp \
+		../camera/secondwindow.cpp \
+		../camera/imagedecoration.cpp \
+		../camera/imagefilter.cpp qrc_images.cpp \
 		moc_mainwindow.cpp \
 		moc_camerathread.cpp \
 		moc_udp_listener_thread.cpp \
@@ -76,7 +78,9 @@ SOURCES       = ../camera/main.cpp \
 		moc_firstwindow.cpp \
 		moc_guideselectwindow.cpp \
 		moc_photowindow.cpp \
-		moc_secondwindow.cpp
+		moc_secondwindow.cpp \
+		moc_imagedecoration.cpp \
+		moc_imagefilter.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		camerathread.o \
@@ -90,6 +94,8 @@ OBJECTS       = main.o \
 		guideselectwindow.o \
 		photowindow.o \
 		secondwindow.o \
+		imagedecoration.o \
+		imagefilter.o \
 		qrc_images.o \
 		moc_mainwindow.o \
 		moc_camerathread.o \
@@ -102,7 +108,9 @@ OBJECTS       = main.o \
 		moc_firstwindow.o \
 		moc_guideselectwindow.o \
 		moc_photowindow.o \
-		moc_secondwindow.o
+		moc_secondwindow.o \
+		moc_imagedecoration.o \
+		moc_imagefilter.o
 DIST          = ../../../buildroot-2024.02.1/output/host/mkspecs/features/spec_pre.prf \
 		../../../buildroot-2024.02.1/output/host/mkspecs/common/unix.conf \
 		../../../buildroot-2024.02.1/output/host/mkspecs/common/linux.conf \
@@ -180,7 +188,9 @@ DIST          = ../../../buildroot-2024.02.1/output/host/mkspecs/features/spec_p
 		../camera/firstwindow.h \
 		../camera/guideselectwindow.h \
 		../camera/photowindow.h \
-		../camera/secondwindow.h ../camera/main.cpp \
+		../camera/secondwindow.h \
+		../camera/imagedecoration.h \
+		../camera/imagefilter.h ../camera/main.cpp \
 		../camera/mainwindow.cpp \
 		../camera/camerathread.cpp \
 		../camera/udp_listener_thread.cpp \
@@ -192,7 +202,9 @@ DIST          = ../../../buildroot-2024.02.1/output/host/mkspecs/features/spec_p
 		../camera/firstwindow.cpp \
 		../camera/guideselectwindow.cpp \
 		../camera/photowindow.cpp \
-		../camera/secondwindow.cpp
+		../camera/secondwindow.cpp \
+		../camera/imagedecoration.cpp \
+		../camera/imagefilter.cpp
 QMAKE_TARGET  = camera
 DESTDIR       = 
 TARGET        = camera
@@ -357,8 +369,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /nfsroot/images/images.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../buildroot-2024.02.1/output/host/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../camera/mainwindow.h ../camera/camerathread.h ../camera/udp_listener_thread.h ../camera/camerasoundplayer.h ../camera/camerasoundthread.h ../camera/bgmsoundplayer.h ../camera/bgmsoundthread.h ../camera/endingwindow.h ../camera/firstwindow.h ../camera/guideselectwindow.h ../camera/photowindow.h ../camera/secondwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../camera/main.cpp ../camera/mainwindow.cpp ../camera/camerathread.cpp ../camera/udp_listener_thread.cpp ../camera/camerasoundplayer.cpp ../camera/camerasoundthread.cpp ../camera/bgmsoundplayer.cpp ../camera/bgmsoundthread.cpp ../camera/endingwindow.cpp ../camera/firstwindow.cpp ../camera/guideselectwindow.cpp ../camera/photowindow.cpp ../camera/secondwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../camera/mainwindow.h ../camera/camerathread.h ../camera/udp_listener_thread.h ../camera/camerasoundplayer.h ../camera/camerasoundthread.h ../camera/bgmsoundplayer.h ../camera/bgmsoundthread.h ../camera/endingwindow.h ../camera/firstwindow.h ../camera/guideselectwindow.h ../camera/photowindow.h ../camera/secondwindow.h ../camera/imagedecoration.h ../camera/imagefilter.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../camera/main.cpp ../camera/mainwindow.cpp ../camera/camerathread.cpp ../camera/udp_listener_thread.cpp ../camera/camerasoundplayer.cpp ../camera/camerasoundthread.cpp ../camera/bgmsoundplayer.cpp ../camera/bgmsoundthread.cpp ../camera/endingwindow.cpp ../camera/firstwindow.cpp ../camera/guideselectwindow.cpp ../camera/photowindow.cpp ../camera/secondwindow.cpp ../camera/imagedecoration.cpp ../camera/imagefilter.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../camera/mainwindow.ui ../camera/endingwindow.ui ../camera/firstwindow.ui ../camera/guideselectwindow.ui ../camera/photowindow.ui ../camera/secondwindow.ui $(DISTDIR)/
 
 
@@ -400,9 +412,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: ../../../buildroot-2024.02.1/output/host/mkspecs/features/data/dummy.cpp
 	/home/user/work/buildroot-2024.02.1/output/host/bin/aarch64-linux-gnu-g++ -pipe -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -O2 -g0 -D_FORTIFY_SOURCE=1 --sysroot=/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot -Wall -Wextra -dM -E -o moc_predefs.h ../../../buildroot-2024.02.1/output/host/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_camerathread.cpp moc_udp_listener_thread.cpp moc_camerasoundplayer.cpp moc_camerasoundthread.cpp moc_bgmsoundplayer.cpp moc_bgmsoundthread.cpp moc_endingwindow.cpp moc_firstwindow.cpp moc_guideselectwindow.cpp moc_photowindow.cpp moc_secondwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_camerathread.cpp moc_udp_listener_thread.cpp moc_camerasoundplayer.cpp moc_camerasoundthread.cpp moc_bgmsoundplayer.cpp moc_bgmsoundthread.cpp moc_endingwindow.cpp moc_firstwindow.cpp moc_guideselectwindow.cpp moc_photowindow.cpp moc_secondwindow.cpp moc_imagedecoration.cpp moc_imagefilter.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_camerathread.cpp moc_udp_listener_thread.cpp moc_camerasoundplayer.cpp moc_camerasoundthread.cpp moc_bgmsoundplayer.cpp moc_bgmsoundthread.cpp moc_endingwindow.cpp moc_firstwindow.cpp moc_guideselectwindow.cpp moc_photowindow.cpp moc_secondwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_camerathread.cpp moc_udp_listener_thread.cpp moc_camerasoundplayer.cpp moc_camerasoundthread.cpp moc_bgmsoundplayer.cpp moc_bgmsoundthread.cpp moc_endingwindow.cpp moc_firstwindow.cpp moc_guideselectwindow.cpp moc_photowindow.cpp moc_secondwindow.cpp moc_imagedecoration.cpp moc_imagefilter.cpp
 moc_mainwindow.cpp: ../camera/mainwindow.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QMainWindow \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qmainwindow.h \
@@ -1562,6 +1574,234 @@ moc_secondwindow.cpp: ../camera/secondwindow.h \
 		../../../buildroot-2024.02.1/output/host/bin/moc
 	/home/user/work/buildroot-2024.02.1/output/host/bin/moc $(DEFINES) --include /home/user/work/project/Y2K_Photo/build-camera-qt_embedded-Debug/moc_predefs.h -I/home/user/work/buildroot-2024.02.1/output/host/mkspecs/devices/linux-buildroot-g++ -I/home/user/work/project/Y2K_Photo/camera -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5 -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtNetwork -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore -I. -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1 -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1/aarch64-linux-gnu -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1/backward -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/lib/gcc/aarch64-linux-gnu/7.3.1/include -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/lib/gcc/aarch64-linux-gnu/7.3.1/include-fixed -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include ../camera/secondwindow.h -o moc_secondwindow.cpp
 
+moc_imagedecoration.cpp: ../camera/imagedecoration.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QWidget \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qwidget.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgetsglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtguiglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig-bootstrapped.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtcore-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsystemdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qprocessordetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcompilerdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtypeinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsysinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlogging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qflags.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbasicatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qgenericatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_msvc.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobalstatic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmutex.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnumeric.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qversiontagging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtgui-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgets-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnamespace.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstring.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qchar.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrefcount.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qarraydata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringliteral.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringview.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringbuilder.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiterator.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhashfunctions.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpair.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvector.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainertools_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpoint.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearraylist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qregexp.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringmatcher.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcoreevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qscopedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmetatype.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvarlengtharray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainerfwd.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmargins.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpaintdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrect.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsize.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpalette.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcolor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgb.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgba64.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qbrush.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qmatrix.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpolygon.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qregion.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdatastream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiodevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qline.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtransform.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qimage.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixelformat.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qshareddata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhash.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfont.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontmetrics.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcursor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qkeysequence.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvariant.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdebug.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtextstream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlocale.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qset.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontiguouscache.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurlquery.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfile.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfiledevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qvector2d.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtouchdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QImage \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QPoint \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QVector \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QColor \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPen \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpen.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QPair \
+		moc_predefs.h \
+		../../../buildroot-2024.02.1/output/host/bin/moc
+	/home/user/work/buildroot-2024.02.1/output/host/bin/moc $(DEFINES) --include /home/user/work/project/Y2K_Photo/build-camera-qt_embedded-Debug/moc_predefs.h -I/home/user/work/buildroot-2024.02.1/output/host/mkspecs/devices/linux-buildroot-g++ -I/home/user/work/project/Y2K_Photo/camera -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5 -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtNetwork -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore -I. -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1 -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1/aarch64-linux-gnu -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1/backward -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/lib/gcc/aarch64-linux-gnu/7.3.1/include -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/lib/gcc/aarch64-linux-gnu/7.3.1/include-fixed -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include ../camera/imagedecoration.h -o moc_imagedecoration.cpp
+
+moc_imagefilter.cpp: ../camera/imagefilter.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QWidget \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qwidget.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgetsglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtguiglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig-bootstrapped.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtcore-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsystemdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qprocessordetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcompilerdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtypeinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsysinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlogging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qflags.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbasicatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qgenericatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_msvc.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobalstatic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmutex.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnumeric.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qversiontagging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtgui-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgets-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnamespace.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstring.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qchar.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrefcount.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qarraydata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringliteral.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringview.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringbuilder.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiterator.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhashfunctions.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpair.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvector.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainertools_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpoint.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearraylist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qregexp.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringmatcher.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcoreevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qscopedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmetatype.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvarlengtharray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainerfwd.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmargins.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpaintdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrect.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsize.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpalette.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcolor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgb.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgba64.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qbrush.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qmatrix.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpolygon.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qregion.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdatastream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiodevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qline.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtransform.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qimage.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixelformat.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qshareddata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhash.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfont.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontmetrics.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcursor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qkeysequence.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvariant.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdebug.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtextstream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlocale.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qset.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontiguouscache.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurlquery.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfile.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfiledevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qvector2d.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtouchdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QImage \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QPushButton \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qpushbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qicon.h \
+		moc_predefs.h \
+		../../../buildroot-2024.02.1/output/host/bin/moc
+	/home/user/work/buildroot-2024.02.1/output/host/bin/moc $(DEFINES) --include /home/user/work/project/Y2K_Photo/build-camera-qt_embedded-Debug/moc_predefs.h -I/home/user/work/buildroot-2024.02.1/output/host/mkspecs/devices/linux-buildroot-g++ -I/home/user/work/project/Y2K_Photo/camera -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5 -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtNetwork -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore -I. -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1 -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1/aarch64-linux-gnu -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include/c++/7.3.1/backward -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/lib/gcc/aarch64-linux-gnu/7.3.1/include -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/lib/gcc/aarch64-linux-gnu/7.3.1/include-fixed -I/home/user/work/buildroot-2024.02.1/output/host/opt/ext-toolchain/aarch64-linux-gnu/include -I/home/user/work/buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include ../camera/imagefilter.h -o moc_imagefilter.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
@@ -2425,12 +2665,16 @@ endingwindow.o: ../camera/endingwindow.cpp ../camera/endingwindow.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qdesktopwidget.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qguiapplication.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qinputmethod.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QLabel \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qframe.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QPushButton \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qpushbutton.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qicon.h \
 		../camera/firstwindow.h \
-		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QString
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QString \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPixmap
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o endingwindow.o ../camera/endingwindow.cpp
 
 firstwindow.o: ../camera/firstwindow.cpp ../camera/firstwindow.h \
@@ -2717,10 +2961,10 @@ guideselectwindow.o: ../camera/guideselectwindow.cpp ../camera/guideselectwindow
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qprocess.h \
 		../camera/camerasoundthread.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QEventLoop \
-		../camera/mainwindow.h \
-		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QMainWindow \
-		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qmainwindow.h \
-		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtabwidget.h
+		../camera/imagefilter.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QImage \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QPushButton \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qpushbutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o guideselectwindow.o ../camera/guideselectwindow.cpp
 
 photowindow.o: ../camera/photowindow.cpp ../camera/photowindow.h \
@@ -2874,6 +3118,12 @@ photowindow.o: ../camera/photowindow.cpp ../camera/photowindow.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QHBoxLayout \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QVBoxLayout \
 		../camera/endingwindow.h \
+		../camera/imagefilter.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QImage \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QPushButton \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qpushbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qicon.h \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QString \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QFile \
 		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPainter \
@@ -3009,6 +3259,278 @@ secondwindow.o: ../camera/secondwindow.cpp ../camera/secondwindow.h \
 		../camera/guideselectwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o secondwindow.o ../camera/secondwindow.cpp
 
+imagedecoration.o: ../camera/imagedecoration.cpp ../camera/imagedecoration.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QWidget \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qwidget.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgetsglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtguiglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig-bootstrapped.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtcore-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsystemdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qprocessordetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcompilerdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtypeinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsysinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlogging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qflags.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbasicatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qgenericatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_msvc.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobalstatic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmutex.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnumeric.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qversiontagging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtgui-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgets-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnamespace.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstring.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qchar.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrefcount.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qarraydata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringliteral.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringview.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringbuilder.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiterator.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhashfunctions.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpair.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvector.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainertools_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpoint.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearraylist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qregexp.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringmatcher.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcoreevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qscopedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmetatype.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvarlengtharray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainerfwd.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmargins.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpaintdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrect.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsize.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpalette.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcolor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgb.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgba64.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qbrush.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qmatrix.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpolygon.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qregion.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdatastream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiodevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qline.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtransform.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qimage.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixelformat.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qshareddata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhash.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfont.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontmetrics.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcursor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qkeysequence.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvariant.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdebug.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtextstream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlocale.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qset.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontiguouscache.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurlquery.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfile.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfiledevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qvector2d.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtouchdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QImage \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QPoint \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QVector \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QColor \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPen \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpen.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QPair \
+		../camera/endingwindow.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QTimer \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtimer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbasictimer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPainter \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpainter.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtextoption.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QMouseEvent \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QVBoxLayout \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qboxlayout.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlayout.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qgridlayout.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QHBoxLayout \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QLabel \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qframe.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QPushButton \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qpushbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qicon.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QColorDialog \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qcolordialog.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qdialog.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QSlider \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qslider.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qabstractslider.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QResizeEvent
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o imagedecoration.o ../camera/imagedecoration.cpp
+
+imagefilter.o: ../camera/imagefilter.cpp ../camera/imagefilter.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QWidget \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qwidget.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgetsglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtguiglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobal.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig-bootstrapped.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qconfig.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtcore-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsystemdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qprocessordetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcompilerdetection.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtypeinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsysinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlogging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qflags.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbasicatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qgenericatomic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qatomic_msvc.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qglobalstatic.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmutex.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnumeric.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qversiontagging.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtgui-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qtwidgets-config.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qnamespace.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstring.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qchar.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrefcount.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qarraydata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringliteral.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringview.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringbuilder.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qalgorithms.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiterator.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhashfunctions.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpair.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvector.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainertools_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qpoint.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qbytearraylist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringlist.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qregexp.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qstringmatcher.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcoreevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qscopedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmetatype.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvarlengtharray.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontainerfwd.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qobject_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmargins.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpaintdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qrect.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsize.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpalette.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcolor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgb.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qrgba64.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qbrush.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qmatrix.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpolygon.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qregion.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdatastream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qiodevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qline.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtransform.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qimage.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixelformat.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpixmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qshareddata.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qhash.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfont.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontmetrics.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qfontinfo.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qcursor.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qkeysequence.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qevent.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qvariant.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qmap.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qdebug.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qtextstream.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qlocale.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qset.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qcontiguouscache.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurl.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qurlquery.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfile.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/qfiledevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qvector2d.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtouchdevice.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QImage \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QPushButton \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qpushbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qicon.h \
+		../camera/imagedecoration.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QPoint \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QVector \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QColor \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPen \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpen.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtCore/QPair \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QPainter \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qpainter.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/qtextoption.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QVBoxLayout \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qboxlayout.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlayout.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qgridlayout.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QHBoxLayout \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/QLabel \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtWidgets/qframe.h \
+		../../../buildroot-2024.02.1/output/host/aarch64-buildroot-linux-gnu/sysroot/usr/include/qt5/QtGui/QResizeEvent
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o imagefilter.o ../camera/imagefilter.cpp
+
 qrc_images.o: qrc_images.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_images.o qrc_images.cpp
 
@@ -3047,6 +3569,12 @@ moc_photowindow.o: moc_photowindow.cpp
 
 moc_secondwindow.o: moc_secondwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_secondwindow.o moc_secondwindow.cpp
+
+moc_imagedecoration.o: moc_imagedecoration.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_imagedecoration.o moc_imagedecoration.cpp
+
+moc_imagefilter.o: moc_imagefilter.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_imagefilter.o moc_imagefilter.cpp
 
 ####### Install
 

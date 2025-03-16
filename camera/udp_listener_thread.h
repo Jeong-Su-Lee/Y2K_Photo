@@ -11,6 +11,7 @@ class UDPListenerThread : public QThread
 public:
     explicit UDPListenerThread(QObject *parent = nullptr);
     ~UDPListenerThread();
+    void stop();
 
 signals:
     void captureRequested();  // UDP 패킷 수신 시 MainWindow에 신호 보내기

@@ -3,6 +3,7 @@
 #include "firstwindow.h"
 #include <QString>
 #include <string>
+#include <QPixmap>
 
 
 EndingWindow::EndingWindow(QWidget *parent) :
@@ -12,6 +13,14 @@ EndingWindow::EndingWindow(QWidget *parent) :
     nextTimer(new QTimer)
 {
     ui->setupUi(this);
+
+    QPixmap pixmap("/mnt/nfs/decorated_image.jpg"); // image 로드
+
+    if (pixmap.isNull()) {
+        ui->lblImg->setText("이미지를 불러올 수 없습니다.");
+    } else {
+        ui->lblImg->setPixmap(pixmap);
+    }
 
     connect(timer, SIGNAL(timeout()), this, SLOT(change_timeText()));
     timer->start(1000);

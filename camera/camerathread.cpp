@@ -1,11 +1,16 @@
 #include "camerathread.h"
 
 CameraThread::CameraThread(QObject *parent)
-    : QThread(parent)
+    : QThread(parent), exitFlag(false)
 {
     videodev.fd = -1;
     frame_count = 0;
     frame_devisor = 1;
+}
+
+void CameraThread::setExitFlag()
+{
+    exitFlag = true;
 }
 
 void CameraThread::run()
@@ -16,13 +21,14 @@ void CameraThread::run()
     if (startCapture() < 0)
         return;
 
-    while (1) {
+    while (!exitFlag) {
         if (captureFrame() < 0)
             break;
     }
-
+    qDebug() << "break!!!!";
     stopCapture();
     closeCapture();
+    quit(); // QThread를 안전하게 종료
 }
 
 void CameraThread::vidioc_enuminput(int fd)
@@ -141,6 +147,10 @@ int CameraThread::captureFrame()
     int ret;
     struct v4l2_buffer buf;
 
+    if (exitFlag) {
+        return -1;
+    }
+
     memset(&buf, 0, sizeof(buf));
     buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     buf.memory = V4L2_MEMORY_USERPTR;
@@ -184,20 +194,61 @@ void CameraThread::closeCapture()
 {
     int i;
     struct buf_info *buff_info;
+    qDebug() << "close Capture!!\n";
+
+    qDebug() << "CAPTURE_MAX_BUFFER =" << CAPTURE_MAX_BUFFER;
+    qDebug() << "sizeof(videodev.buff_info) =" << sizeof(videodev.buff_info);
+    qDebug() << "sizeof(videodev.buff_info[0]) =" << sizeof(videodev.buff_info[0]);
+    qDebug() << "Calculated buffer count =" << (sizeof(videodev.buff_info) / sizeof(videodev.buff_info[0]));
+
 
     /* Un-map the buffers */
-    for (i = 0; i < CAPTURE_MAX_BUFFER; i++){
+    for (i = 0; i < CAPTURE_MAX_BUFFER; i++) {
+        qDebug() << "before get buff_info, i =" << i;
+
         buff_info = &videodev.buff_info[i];
+
+        if (!buff_info) {
+            qDebug() << "buff_info is NULL at index" << i;
+            continue;
+        }
+
+        qDebug() << "after get buff_info, i =" << i;
+
         if (buff_info->start) {
+            qDebug() << "Checking memory before unmapping, addr =" << buff_info->start
+                     << ", length =" << buff_info->length;
+
+            if (buff_info->length <= 0) {
+                qDebug() << "ERROR: Invalid buffer length! Skipping munmap.";
+                continue;
+            }
+
+            if (msync(buff_info->start, buff_info->length, MS_SYNC) == -1) {
+                perror("ERROR: msync failed, invalid memory?");
+                qDebug() << "Skipping munmap due to msync failure.";
+                continue;
+            }
+
+            qDebug() << "Memory sync successful, proceeding with munmap.";
             munmap(buff_info->start, buff_info->length);
             buff_info->start = NULL;
+            qDebug() << "After munmap, addr should be NULL:" << buff_info->start;
+        } else {
+            qDebug() << "buff_info->start is NULL at index" << i;
         }
     }
 
+    qDebug() << "before close Capture!!\n";
+
     if (videodev.fd >= 0) {
+        qDebug() << "About to close fd:" << videodev.fd;
         close(videodev.fd);
+        qDebug() << "Closed fd successfully";
         videodev.fd = -1;
     }
+
+    qDebug() << "dondone close Capture!!\n";
 }
 
 int CameraThread::subInitCapture()

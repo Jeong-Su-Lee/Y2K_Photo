@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
@@ -20,6 +21,7 @@ class Ui_EndingWindow
 {
 public:
     QPushButton *btnEnding;
+    QLabel *lblImg;
 
     void setupUi(QWidget *EndingWindow)
     {
@@ -36,6 +38,9 @@ public:
 "border: none;\n"
 "outline: none;"));
         btnEnding->setFlat(true);
+        lblImg = new QLabel(EndingWindow);
+        lblImg->setObjectName(QString::fromUtf8("lblImg"));
+        lblImg->setGeometry(QRect(10, 50, 741, 461));
 
         retranslateUi(EndingWindow);
 
@@ -46,6 +51,7 @@ public:
     {
         EndingWindow->setWindowTitle(QCoreApplication::translate("EndingWindow", "Form", nullptr));
         btnEnding->setText(QCoreApplication::translate("EndingWindow", "Exit... 9", nullptr));
+        lblImg->setText(QString());
     } // retranslateUi
 
 };
