@@ -426,29 +426,11 @@ int main() {
         }
         else if (strncmp(header, "IMG1", 4) == 0 || strncmp(buffer, "EOFIMG1", 7) == 0)
         {
-            if (strncmp(buffer, "EOFIMG1", 7) == 0)
-            {
-                sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[1].addr, sizeof(clients[1].addr));
-            }
-            else
-            {
-                jpg_size = recv_len - 4;
-                unsigned char *jpg_data = buffer + 4;
-                sendto(sockfd, jpg_data, jpg_size, 0,(struct sockaddr*)&clients[1].addr, sizeof(clients[1].addr));
-            }
+            sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[1].addr, sizeof(clients[1].addr));
         }
         else if (strncmp(header, "IMG2", 4) == 0 || strncmp(buffer, "EOFIMG2", 7) == 0)
         {
-            if (strncmp(buffer, "EOFIMG2", 7) == 0)
-            {
-                sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
-            }
-            else
-            {
-                jpg_size = recv_len - 4;
-                unsigned char *jpg_data = buffer + 4;
-                sendto(sockfd, jpg_data, jpg_size, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
-            }
+            sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
         }
 
     }

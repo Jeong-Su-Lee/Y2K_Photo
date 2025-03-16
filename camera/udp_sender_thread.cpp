@@ -64,7 +64,7 @@ void SenderThread::run()
             image.save(&buffer, "JPG");
 
             int offset = 0;
-            const int chunkSize = 65536;
+            const int chunkSize = 32768;
             while (offset < imageData.size()) {
                 QByteArray chunk = imageData.mid(offset, chunkSize);
 

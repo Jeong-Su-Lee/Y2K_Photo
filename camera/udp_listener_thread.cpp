@@ -117,12 +117,12 @@ void UDPListenerThread::run()
                     incomingImageBuffer.clear();
                 }
                 // 헤더 정보 없을 시, 이미지로 판단해서, 이미지 버퍼에 저장함.
-                else // if (datagram.startsWith("IMG"))
+                else if (datagram.startsWith("IMG"))
                 {
                     // 시작 패킷
 //                    qDebug() << "UDP IMG recieve ";
                     receivingImage = true;
-                    incomingImageBuffer.append(datagram); // "IMG1" 이후가 JPG 데이터
+                    incomingImageBuffer.append(datagram.mid(4)); // "IMG1" 이후가 JPG 데이터
                 }
 
 //                qDebug() << "UDP 신호 수신됨: " << datagram;
