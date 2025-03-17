@@ -150,5 +150,4 @@ void UDPListenerThread::run()
             }
         }
     }
-    qDebug() << "종료함";
 }

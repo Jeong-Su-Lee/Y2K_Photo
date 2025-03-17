@@ -44,7 +44,7 @@ void SecondWindow::changeWindow()
 
     timer->stop();
     nextTimer->stop();
-    udp_temporal->terminate();
+    delete udp_temporal;
 }
 
 SecondWindow::~SecondWindow()
