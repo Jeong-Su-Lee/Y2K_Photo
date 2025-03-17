@@ -51,6 +51,7 @@ void UDPListenerThread::run()
     QByteArray FinalimageBuffer;
     bool receivingFinalImage = false;
 
+    running = true;
     while (running) {
         if (udpSocket->waitForReadyRead(100)) {
             while (udpSocket->hasPendingDatagrams()) {
@@ -59,6 +60,7 @@ void UDPListenerThread::run()
                 udpSocket->readDatagram(datagram.data(), datagram.size());
                 // Client 번호 받음
                 if (datagram.startsWith("CLI")) {
+                    qDebug() << "[클라] client number 수신: " << QString::fromUtf8(datagram) << "\n";
                     emit clientIdReceived(QString::fromUtf8(datagram));  // 시그널로 MainWindow에 전달
                 }
                 // Capture 신호 받아서 사진 저장
@@ -68,7 +70,10 @@ void UDPListenerThread::run()
                 // 남은 시간 받는 부분
                 else if (datagram.startsWith("CNT")) {
                     // 시간 받아서 화면에 띄워주는 함수로 분기 필요
-                    continue;
+
+                    int timeCount = QString::fromUtf8(datagram).back().digitValue();
+                    qDebug() << "[클라] CNT 수신 중 " << timeCount << "\n";
+                    emit timeCountReceived(timeCount);
                 }
                 // 마지막이므로 카메라 끄고, 이미지 받을 준비함
                 if (datagram.startsWith("FINIMG")) {
@@ -97,6 +102,7 @@ void UDPListenerThread::run()
 
                         FinalimageBuffer.clear();
                         receivingFinalImage = false;
+                        emit finalImageReceived();
                     }
                 }
                 // 이미지 스트림 마지막 부분 받아서 화면에 띄워줌

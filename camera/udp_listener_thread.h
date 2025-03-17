@@ -17,6 +17,8 @@ signals:
     void captureRequested();  // UDP 패킷 수신 시 MainWindow에 신호 보내기
     void clientIdReceived(const QString& id);
     void imageReceived(const QImage &image);
+    void timeCountReceived(const int timeCount);
+    void finalImageReceived();
 
 protected:
     void run() override;

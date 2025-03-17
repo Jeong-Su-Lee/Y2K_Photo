@@ -28,7 +28,7 @@ public:
 
 
 private slots:
-    void change_timeText();
+    void change_timeText(int timeCount);
     void go_to_nextWindow();
     void handle_data(const uchar *data, int width, int height);
     void save_current_frame();

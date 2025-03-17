@@ -60,7 +60,7 @@ ImageFilter::ImageFilter(QWidget *parent) : QWidget(parent) {
 
     mainLayout->addWidget(rightWidget);
 
-    if (!image.load("/mnt/nfs/test_image_jpgtype.jpg")) {
+    if (!image.load("/mnt/nfs/final.jpg")) {
         qWarning("Failed to load image!");
     }
     image = image.scaled(785, 600, Qt::KeepAspectRatio, Qt::SmoothTransformation);

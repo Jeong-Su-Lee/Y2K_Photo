@@ -89,14 +89,12 @@ font-weight: 800;</string>
         </property>
         <property name="styleSheet">
          <string notr="true">border-radius: 32px;
-background-color: white;</string>
+background-color: white;
+font: 26pt &quot;Noto Sans CJK KR&quot;;
+color: gray;</string>
         </property>
         <property name="text">
          <string>None</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../../../../../nfsroot/images/images.qrc">
-          <normaloff>:/images/none.png</normaloff>:/images/none.png</iconset>
         </property>
         <property name="iconSize">
          <size>

@@ -16,10 +16,6 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // FIXME: to use server timer.
-    connect(timer, SIGNAL(timeout()), this, SLOT(change_timeText()));
-    timer->start(1000);
-
     ui->lblTime->setText(QString::number(TIME_LIMIT));
 
 
@@ -31,11 +27,14 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
     udp_listener = new UDPListenerThread(this);
     connect(udp_listener, &UDPListenerThread::captureRequested, this, &PhotoWindow::save_current_frame);
     connect(udp_listener, &UDPListenerThread::clientIdReceived, this, &PhotoWindow::onClientIdReceived);
+    connect(udp_listener, &UDPListenerThread::timeCountReceived, this, &PhotoWindow::change_timeText);
 
-    udp_listener->start();
+
 
     connect(udp_listener, &UDPListenerThread::imageReceived, this, &PhotoWindow::displayReceivedImage);
+    connect(udp_listener, &UDPListenerThread::finalImageReceived, this, &PhotoWindow::go_to_nextWindow);
 
+    udp_listener->start();
 }
 
 
@@ -101,33 +100,28 @@ void PhotoWindow::rise_count(){
             toggle_grid(ui->lbl15);
             toggle_grid(ui->lbl16);
             break;
-        case 8:
-            udp_listener->terminate();
-            return go_to_nextWindow();
+        default:
+            return;
     }
 
     ui->lblCount->setText(QString::number(curCount+1));
 }
 
-void PhotoWindow::change_timeText()
+void PhotoWindow::change_timeText(const int timeCount)
 {
-    int curTime = ui->lblTime->text().toInt();
-    if (curTime) {
-        ui->lblTime->setText(QString::number(curTime-1));
-    } else {
-
-        ui->lblTime->setText(QString::number(TIME_LIMIT));
-    }
+    ui->lblTime->setText(QString::number(timeCount-1));
 }
 
 void PhotoWindow::go_to_nextWindow()
 {
+
     ImageFilter *imageFilter = new ImageFilter();
     this->hide();
     imageFilter->show();
 
     timer->stop();
     camera->setExitFlag();
+    udp_listener->terminate();
 }
 
 
@@ -365,7 +359,7 @@ void PhotoWindow::save_current_frame()
    }
 
     rise_count();
-    change_timeText();
+    ui->lblTime->setText(QString::number(TIME_LIMIT));
 }
 
 void PhotoWindow::sendImageToServer(const QString& filePath)
