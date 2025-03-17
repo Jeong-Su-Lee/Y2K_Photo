@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     secondwindow.cpp \
     imagedecoration.cpp \
     imagefilter.cpp \
-    udp_sender_thread.cpp
+    udp_sender_thread.cpp \
+    imageprocessworker.cpp
 
 HEADERS  += \
     camerathread.h \
@@ -42,7 +43,8 @@ HEADERS  += \
     secondwindow.h \
     imagedecoration.h \
     imagefilter.h \
-    udp_sender_thread.h
+    udp_sender_thread.h \
+    imageprocessworker.h
 
 FORMS    += \
     endingwindow.ui \

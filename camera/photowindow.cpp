@@ -36,8 +36,29 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
     connect(udp_listener, &UDPListenerThread::finalImageReceived, this, &PhotoWindow::go_to_nextWindow);
 
     udp_listener->start();
-}
 
+    imageThread = new QThread(this);
+    imageWorker = new ImageProcessorWorker();
+
+    imageWorker->moveToThread(imageThread);
+    connect(imageThread, &QThread::finished, imageWorker, &QObject::deleteLater);
+
+   // 프레임 처리 요청
+    connect(this, &PhotoWindow::requestFrameProcessing, imageWorker, &ImageProcessorWorker::processFrame);
+
+   // 처리 완료 수신
+    connect(imageWorker, &ImageProcessorWorker::frameProcessed, this, &PhotoWindow::onFrameProcessed);
+
+    imageThread->start();
+}
+void PhotoWindow::onFrameProcessed(const QPixmap &pixmap)
+ {
+    if (myclientId == "CLI1") {
+        ui->lblImg->setPixmap(pixmap);
+    } else if (myclientId == "CLI2") {
+        ui->lblImg2->setPixmap(pixmap);
+    }
+ }
 
 void PhotoWindow::toggle_grid(QLabel *lbl){
     QString styleSheet = lbl->styleSheet();
@@ -204,14 +225,15 @@ void PhotoWindow::handle_data(const uchar *data, int width, int height)
    QPixmap pixmap = QPixmap::fromImage(image);
    if (myclientId == "CLI1")
    {
-       ui->lblImg->setPixmap(pixmap);
-       senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+    //    ui->lblImg->setPixmap(pixmap);
+       senderThread->enqueueImage(image);
    }
    else if (myclientId == "CLI2")
    {
-       ui->lblImg2->setPixmap(pixmap);
-       senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+    //    ui->lblImg2->setPixmap(pixmap);
+       senderThread->enqueueImage(image);
    }
+   emit requestFrameProcessing(QByteArray(reinterpret_cast<const char*>(data), width * height * 2), width, height, guidename, myclientId);
 
 }
 
@@ -290,7 +312,7 @@ void PhotoWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 
 void PhotoWindow::save_current_frame()
 {
-   QImage image(image_buf, 640, 480, QImage::Format_RGB888);
+   QImage image(image_buf, 320, 240, QImage::Format_RGB888);
    mCameraSoundPlayer.startMusic();
    // senderThread->enqueueImage(image);
    QUdpSocket udpSocket;
@@ -313,6 +335,7 @@ void PhotoWindow::save_current_frame()
        QByteArray imageData;
        QBuffer buffer(&imageData);
        buffer.open(QIODevice::WriteOnly);
+       image = image.mirrored(true, false);
        image.save(&buffer, "JPG");
 
        int offset = 0;
