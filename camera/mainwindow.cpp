@@ -24,6 +24,22 @@ MainWindow::MainWindow(QWidget *parent) :
     udp_listener->start();
 
     connect(udp_listener, &UDPListenerThread::imageReceived, this, &MainWindow::displayReceivedImage);
+    // MainWindow.cpp - 생성자 등에서 초기화
+    imageThread = new QThread(this);
+    imageWorker = new ImageProcessorWorker();
+
+    imageWorker->moveToThread(imageThread);
+    connect(imageThread, &QThread::finished, imageWorker, &QObject::deleteLater);
+
+   // 프레임 처리 요청
+    connect(this, &MainWindow::requestFrameProcessing,
+           imageWorker, &ImageProcessorWorker::processFrame);
+
+   // 처리 완료 수신
+    connect(imageWorker, &ImageProcessorWorker::frameProcessed,
+           this, &MainWindow::onFrameProcessed);
+
+    imageThread->start();
 }
 
 MainWindow::~MainWindow()
@@ -42,6 +58,15 @@ void MainWindow::displayReceivedImage(const QImage &image) {
     {
         ui->lblImg->setPixmap(pixmap);
     }
+}
+
+void MainWindow::onFrameProcessed(const QPixmap &pixmap)
+{
+   if (myclientId == "CLI1") {
+       ui->lblImg->setPixmap(pixmap);
+   } else if (myclientId == "CLI2") {
+       ui->lblImg2->setPixmap(pixmap);
+   }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -97,17 +122,18 @@ void MainWindow::handle_data(const uchar *data, int width, int height)
     //qDebug() << "handle_data" << data << width << height;
     yuyv2rgb(data, width, height, image_buf);
     QImage image(image_buf, width, height, QImage::Format_RGB888);
-    QPixmap pixmap = QPixmap::fromImage(image);
+    QString guidename = "heart";
+//    image = image.mirrored(true, false);
+//    QPixmap pixmap = QPixmap::fromImage(image);
     if (myclientId == "CLI1")
     {
-        ui->lblImg->setPixmap(pixmap);
-        senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+        senderThread->enqueueImage(image);
     }
     else if (myclientId == "CLI2")
     {
-        ui->lblImg2->setPixmap(pixmap);
-        senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+        senderThread->enqueueImage(image);
     }
+    emit requestFrameProcessing(QByteArray(reinterpret_cast<const char*>(data), width * height * 2), width, height, guidename, myclientId);
 
 }
 
@@ -209,6 +235,7 @@ void MainWindow::save_current_frame()
         QByteArray imageData;
         QBuffer buffer(&imageData);
         buffer.open(QIODevice::WriteOnly);
+        image = image.mirrored(true, false);
         image.save(&buffer, "JPG");
 
         int offset = 0;
@@ -253,6 +280,6 @@ void MainWindow::save_current_frame()
     }
     else if(myclientId == "CLI2"){
         ui->guideimg2->setPixmap(overlay_pixmap);
-    }
+   }
 }
 

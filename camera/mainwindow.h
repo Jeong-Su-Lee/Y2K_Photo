@@ -6,11 +6,14 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QCloseEvent>
+#include <QThread>
 
 #include "camerathread.h"
 #include "udp_listener_thread.h"
 #include "camerasoundplayer.h"
 #include "udp_sender_thread.h"
+#include "imageprocessorworker.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -24,12 +27,16 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     QString myclientId; // 전역 멤버로 선언
+    QThread *imageThread;
+    ImageProcessorWorker *imageWorker;
 
 
 public slots:
     void handle_data(const uchar *data, int width, int height);
     void save_current_frame();
     void displayReceivedImage(const QImage &image);
+signals:
+    void requestFrameProcessing(QByteArray frameData, int width, int height, QString guideName, QString clientId);
 
 private:
     void sendImageToServer(const QString &filePath);
@@ -47,6 +54,7 @@ private:
 
 private slots:
     void onClientIdReceived(const QString& id);
+    void onFrameProcessed(const QPixmap &pixmap);
 protected:
     void closeEvent(QCloseEvent *event) override;
 
