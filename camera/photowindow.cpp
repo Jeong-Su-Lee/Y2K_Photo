@@ -169,7 +169,7 @@ PhotoWindow::~PhotoWindow()
 
 
 void PhotoWindow::displayReceivedImage(const QImage &image) {
-   QPixmap pixmap = QPixmap::fromImage(image);
+   QPixmap pixmap = QPixmap::fromImage(image.mirrored(true,false));
 //    qDebug() << "UDP IMG Display ";
    if (myclientId == "CLI1")
    {

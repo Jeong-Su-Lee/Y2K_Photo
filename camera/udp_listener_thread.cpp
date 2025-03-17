@@ -129,7 +129,6 @@ void UDPListenerThread::run()
 
                     if (image.loadFromData(incomingImageBuffer, "JPG")) {
                         image = image.scaled(640, 480, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                        image.mirrored(true, false);
                         emit imageReceived(image); // MainWindow로 시그널 emit 
                     } else {
 //                        qDebug() << "[UDP] 이미지 디코딩 실패";
