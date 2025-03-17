@@ -325,7 +325,7 @@ void PhotoWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 
 void PhotoWindow::save_current_frame()
 {
-   QImage image(image_buf, 320, 240, QImage::Format_RGB888);
+   QImage image(image_buf, 640, 480, QImage::Format_RGB888);
    mCameraSoundPlayer.startMusic();
    // senderThread->enqueueImage(image);
    QUdpSocket udpSocket;
