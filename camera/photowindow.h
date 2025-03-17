@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QPixmap>
+#include <QString>
 #include <QLabel>
 #include "camerathread.h"
 #include "udp_listener_thread.h"
@@ -53,9 +54,11 @@ private:
     uchar *image_buf;
     int front_index;
     int number_of_guide =2;
+    QString guidename;
 
 private slots:
     void onClientIdReceived(const QString& id);
+    void setGuideFromChar(QChar guideChar);
 protected:
     void closeEvent(QCloseEvent *event) override;
 

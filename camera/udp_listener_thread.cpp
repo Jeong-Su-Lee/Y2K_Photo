@@ -75,8 +75,19 @@ void UDPListenerThread::run()
                     qDebug() << "[클라] CNT 수신 중 " << timeCount << "\n";
                     emit timeCountReceived(timeCount);
                 }
+                else if (datagram.startsWith("CONNCOMP"))
+                {
+                    // 연결 끝나면 보내는 거 필요
+                    emit connCompleteReceived();
+                }
+                else if (datagram.startsWith("GUIDE"))
+                {
+                    // 연결 끝나면 보내는 거 필요
+                    QChar guideChar(datagram[5]);
+                    emit GuideReceived(guideChar);
+                }
                 // 마지막이므로 카메라 끄고, 이미지 받을 준비함
-                if (datagram.startsWith("FINIMG")) {
+                else if (datagram.startsWith("FINIMG")) {
                     if (!receivingFinalImage) {
                         // Only clear the buffer when starting to receive a new image
                         receivingFinalImage = true;

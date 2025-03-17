@@ -286,6 +286,8 @@ int main() {
     char msg[MAX_MSG_LEN] = {0,};
     int jpg_size = 0;
     unsigned char *jpg_data = NULL;
+    char guide_name[7] = {0,};
+    int guide_flag = 0;
 
 
     const char* img1 = "img_client1_1.jpg";
@@ -334,6 +336,7 @@ int main() {
                 sprintf(msg, "CLI%d", client_index + 1);
                 clients[client_index].addr.sin_port = htons(SERVER_PORT);
                 sleep(1); // 충분한 설정시간 줌
+                broadcast_message(sockfd, clients, guide_name);
                 send_message(sockfd, clients[client_index].addr, msg);
 
                 printf("클라이언트 추가됨: %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
@@ -358,7 +361,7 @@ int main() {
             continue;
         }
         // "EOF" 수신 시 이미지 저장 종료
-        if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
+        else if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
             if (strncmp(buffer, "EOFCAP1", 7) == 0 && fp) {
                 fclose(fp);
                 fp = NULL;
@@ -388,7 +391,7 @@ int main() {
             continue;
         }
 
-        if (strncmp(header, "CAP1", 4) == 0)
+        else if (strncmp(header, "CAP1", 4) == 0)
         {
             // 저장: CAPn
             if (!fp && !receiving_image) {
@@ -431,6 +434,11 @@ int main() {
         else if (strncmp(header, "IMG2", 4) == 0 || strncmp(buffer, "EOFIMG2", 7) == 0)
         {
             sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
+        }
+        if (recv_len >= 5 && strncmp(buffer, "GUIDE", 5) == 0 && guide_flag == 0)
+        {
+            guide_flag = 1;
+            strncpy(guide_name, buffer, 6);
         }
 
     }

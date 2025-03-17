@@ -28,6 +28,7 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
     connect(udp_listener, &UDPListenerThread::captureRequested, this, &PhotoWindow::save_current_frame);
     connect(udp_listener, &UDPListenerThread::clientIdReceived, this, &PhotoWindow::onClientIdReceived);
     connect(udp_listener, &UDPListenerThread::timeCountReceived, this, &PhotoWindow::change_timeText);
+    connect(udp_listener, &UDPListenerThread::GuideReceived, this, &PhotoWindow::setGuideFromChar);
 
 
 
@@ -163,7 +164,7 @@ void PhotoWindow::onClientIdReceived(const QString& id) {
    qDebug() << "클라이언트 ID 할당됨:" << myclientId;
    senderThread = new SenderThread(myclientId, this);
    senderThread->start();
-   QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
+//    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
    if (myclientId == "CLI1"){
        number_of_guide = 1;
    }
@@ -332,7 +333,7 @@ void PhotoWindow::save_current_frame()
        udpSocket.writeDatagram(prefix_eof.toUtf8(), serverAddress, serverPort);
        // qDebug() << "이미지 전송 완료";
    }
-   QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
+//    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
    number_of_guide += 2;
    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
    QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
@@ -384,3 +385,19 @@ void PhotoWindow::sendImageToServer(const QString& filePath)
     qDebug() << "이미지 전송 완료.";
 }
 
+void PhotoWindow::setGuideFromChar(QChar guideChar)
+{
+    if(guideChar == "H"){
+        guidename = "heart";
+    }
+    else if(guideChar == "L"){
+        guidename = "lg_logo";
+    }
+    else if(guideChar == "S"){
+        guidename = "star";
+    }
+    else{
+        guidename ="none";
+    }
+    qDebug() << "[MainWindow] 가이드 이미지 이름 설정됨:" << guidename;
+}
