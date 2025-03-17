@@ -313,8 +313,8 @@ int CameraThread::subInitCapture()
                  << " height =" << fmt.fmt.pix.height
                  << " pfmt =" << fmt.fmt.pix.pixelformat;
 
-    fmt.fmt.pix.width = 640;
-    fmt.fmt.pix.height = 480;
+    fmt.fmt.pix.width = 320;
+    fmt.fmt.pix.height = 240;
     fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
     if (ioctl(fd, VIDIOC_S_FMT, &fmt) < 0)
         qWarning() << "VIDIOC_S_FMT fail" << errno;
@@ -329,8 +329,8 @@ int CameraThread::subInitCapture()
         qDebug() << "fmt width =" << fmt.fmt.pix.width
                  << " height =" << fmt.fmt.pix.height
                  << " pfmt =" << fmt.fmt.pix.pixelformat;
-    Q_ASSERT(fmt.fmt.pix.width == 640);
-    Q_ASSERT(fmt.fmt.pix.height == 480);
+    // Q_ASSERT(fmt.fmt.pix.width == 640);
+    // Q_ASSERT(fmt.fmt.pix.height == 480);
     Q_ASSERT(fmt.fmt.pix.pixelformat == V4L2_PIX_FMT_YUYV);
 
     videodev.cap_width = fmt.fmt.pix.width;
