@@ -21,6 +21,7 @@
 
      QImage image(reinterpret_cast<uchar*>(rgbBuf.data()), width, height, QImage::Format_RGB888);
      image = image.mirrored(true, false);
+     image = image.scaled(640, 480, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
      // // // 2. 가이드 이미지 처리
      // static int number_of_guide = 0;

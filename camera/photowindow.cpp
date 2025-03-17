@@ -325,7 +325,7 @@ void PhotoWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 
 void PhotoWindow::save_current_frame()
 {
-   QImage image(image_buf, 640, 480, QImage::Format_RGB888);
+   QImage image(image_buf, 320, 240, QImage::Format_RGB888);
    mCameraSoundPlayer.startMusic();
    // senderThread->enqueueImage(image);
    QUdpSocket udpSocket;
@@ -349,6 +349,7 @@ void PhotoWindow::save_current_frame()
        QBuffer buffer(&imageData);
        buffer.open(QIODevice::WriteOnly);
        image = image.mirrored(true, false);
+       image = image.scaled(640, 480, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
        image.save(&buffer, "JPG");
 
        int offset = 0;
