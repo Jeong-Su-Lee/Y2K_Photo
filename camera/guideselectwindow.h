@@ -20,6 +20,13 @@ public:
 private slots:
     void go_to_nextWindow();
 
+    void on_btnNone_clicked();
+
+    void on_btnHeart_clicked();
+
+    void on_btnStar_clicked();
+
+    void on_btnLG_clicked();
 
 private:
     Ui::GuideSelectWindow *ui;

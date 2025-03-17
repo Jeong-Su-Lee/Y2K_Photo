@@ -31,3 +31,24 @@ GuideSelectWindow::~GuideSelectWindow()
     delete ui;
     delete timer;
 }
+
+
+void GuideSelectWindow::on_btnNone_clicked()
+{
+    // handle on clicked "None" guide
+}
+
+void GuideSelectWindow::on_btnHeart_clicked()
+{
+    // handle on clicked "Heart" guide
+}
+
+void GuideSelectWindow::on_btnStar_clicked()
+{
+    // handle on clicked "Star" guide
+}
+
+void GuideSelectWindow::on_btnLG_clicked()
+{
+    // handle on clicked "LG logo" guide
+}
