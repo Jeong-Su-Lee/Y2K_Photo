@@ -9,6 +9,16 @@ SecondWindow::SecondWindow(QWidget *parent) :
     nextTimer(new QTimer)
 {
     ui->setupUi(this);
+    udp_temporal = new UDPListenerThread(this);
+    connect(udp_temporal, &UDPListenerThread::connCompleteReceived, this, &SecondWindow::changeWindow);
+    QUdpSocket udpSocket;
+
+    QByteArray datagram = "TEMP";
+    QHostAddress targetIp("192.168.10.2");
+    quint16 targetPort = 25000;
+
+    udpSocket.writeDatagram(datagram, targetIp, targetPort);
+    udp_temporal->start();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(slotTimerAlarm()));
     timer->start(1000);
@@ -34,6 +44,7 @@ void SecondWindow::changeWindow()
 
     timer->stop();
     nextTimer->stop();
+    udp_temporal->terminate();
 }
 
 SecondWindow::~SecondWindow()

@@ -12,22 +12,23 @@ UDPListenerThread::UDPListenerThread(QObject *parent)
 {
     udpSocket = new QUdpSocket(this);
 
-    QByteArray datagram = "CONN";
-    QHostAddress targetIp("192.168.10.2");
-    quint16 targetPort = 25000;
+//    QByteArray datagram = "CONN";
+//    QHostAddress targetIp("192.168.10.2");
+//    quint16 targetPort = 25000;
 
-    qint64 bytes = udpSocket->writeDatagram(datagram, targetIp, targetPort);
+//    qint64 bytes = udpSocket->writeDatagram(datagram, targetIp, targetPort);
 
-    qDebug() << "UDP 전송됨:" << datagram << ", 바이트 수:" << bytes;
+//    qDebug() << "UDP 전송됨:" << datagram << ", 바이트 수:" << bytes;
 
-    if (bytes == -1) {
-        qDebug() << "UDP 전송 에러:" << udpSocket->errorString();
-    }
+//    if (bytes == -1) {
+//        qDebug() << "UDP 전송 에러:" << udpSocket->errorString();
+//    }
 }
 
 UDPListenerThread::~UDPListenerThread()
 {
     running = false;
+    qDebug() << "UDP 종료:" << udpSocket->errorString();
     if (udpSocket) {
         udpSocket->close();
         delete udpSocket;
@@ -79,6 +80,7 @@ void UDPListenerThread::run()
                 {
                     // 연결 끝나면 보내는 거 필요
                     emit connCompleteReceived();
+                    running = false;
                 }
                 else if (datagram.startsWith("GUIDE"))
                 {
@@ -142,10 +144,11 @@ void UDPListenerThread::run()
                     incomingImageBuffer.append(datagram.mid(4)); // "IMG1" 이후가 JPG 데이터
                 }
 
-//                qDebug() << "UDP 신호 수신됨: " << datagram;
+            //    qDebug() << "UDP 신호 수신됨: " << datagram;
 
 
             }
         }
     }
+    qDebug() << "종료함";
 }

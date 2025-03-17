@@ -16,6 +16,8 @@
 #define MAX_CLIENTS 10
 #define FINAL_HEADER "FINIMG"
 #define FINAL_HEADER_LEN 6 
+#define msleep(x) usleep((x) * 1000)
+
 int shooting_count = 0;
 
 
@@ -288,6 +290,7 @@ int main() {
     unsigned char *jpg_data = NULL;
     char guide_name[7] = {0,};
     int guide_flag = 0;
+    Client clients_temp[2] = {0,};
 
 
     const char* img1 = "img_client1_1.jpg";
@@ -333,32 +336,34 @@ int main() {
             if(find_client(clients, &client_addr) == -1){
                 add_client(clients,&client_addr); //클라이언트 추가   
                 client_index = find_client(clients, &client_addr);
-                sprintf(msg, "CLI%d", client_index + 1);
+                // sprintf(msg, "CLI%d", client_index + 1);
                 clients[client_index].addr.sin_port = htons(SERVER_PORT);
-                sleep(1); // 충분한 설정시간 줌
-                broadcast_message(sockfd, clients, guide_name);
-                send_message(sockfd, clients[client_index].addr, msg);
-
+                msleep(200);  // 충분한 설정시간 줌
+                if (client_index == 1){
+                    // broadcast_message(sockfd, clients, "CONNCOMP");
+                    broadcast_message(sockfd, clients, guide_name);
+                    send_message(sockfd, clients[0].addr, "CLI1");
+                    send_message(sockfd, clients[1].addr, "CLI2");
+                    pthread_t tid;
+                    struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
+                    args->sockfd = sockfd;
+                    memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
+                    if(client_index == 1){
+                        if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
+                        {
+                            perror("타임 스레드 생성 실패");
+                            free(args);
+                        } 
+                        else
+                        {
+                            pthread_detach(tid); // 메모리 자동 회수
+                        }
+                    }
+                    continue;
+                }
                 printf("클라이언트 추가됨: %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             }
             // client_found = 1;
-            
-            pthread_t tid;
-            struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
-            args->sockfd = sockfd;
-            memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
-            if(client_index == 1){
-                if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
-                {
-                    perror("타임 스레드 생성 실패");
-                    free(args);
-                } 
-                else
-                {
-                    pthread_detach(tid); // 메모리 자동 회수
-                }
-            }
-            continue;
         }
         // "EOF" 수신 시 이미지 저장 종료
         else if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
@@ -435,10 +440,25 @@ int main() {
         {
             sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
         }
-        if (recv_len >= 5 && strncmp(buffer, "GUIDE", 5) == 0 && guide_flag == 0)
+        else if (recv_len >= 5 && strncmp(buffer, "GUIDE", 5) == 0 && guide_flag == 0)
         {
             guide_flag = 1;
             strncpy(guide_name, buffer, 6);
+        }
+        else if (recv_len >= 4 && strncmp(buffer, "TEMP", 4) == 0 ){
+            if(find_client(clients_temp, &client_addr) == -1)
+            {
+                add_client(clients_temp, &client_addr); //클라이언트 추가   
+                client_index = find_client(clients_temp, &client_addr);
+                // sprintf(msg, "CLI%d", client_index + 1);
+                clients_temp[client_index].addr.sin_port = htons(SERVER_PORT);
+                msleep(200); // 충분한 설정시간 줌
+                if (client_index == 1)
+                {
+                    printf("broadcast\n");
+                    broadcast_message(sockfd, clients_temp, "CONNCOMP");    
+                }
+            }
         }
 
     }

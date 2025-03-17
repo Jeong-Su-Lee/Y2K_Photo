@@ -25,6 +25,19 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
     camera->start();
 
     udp_listener = new UDPListenerThread(this);
+    QUdpSocket udpSocket;
+
+    QByteArray datagram = "CONN";
+    QHostAddress targetIp("192.168.10.2");
+    quint16 targetPort = 25000;
+
+    qint64 bytes = udpSocket.writeDatagram(datagram, targetIp, targetPort);
+
+    qDebug() << "UDP 전송됨:" << datagram << ", 바이트 수:" << bytes;
+
+    if (bytes == -1) {
+        qDebug() << "UDP 전송 에러:" << udpSocket.errorString();
+    }
     connect(udp_listener, &UDPListenerThread::captureRequested, this, &PhotoWindow::save_current_frame);
     connect(udp_listener, &UDPListenerThread::clientIdReceived, this, &PhotoWindow::onClientIdReceived);
     connect(udp_listener, &UDPListenerThread::timeCountReceived, this, &PhotoWindow::change_timeText);
