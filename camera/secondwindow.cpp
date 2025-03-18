@@ -23,8 +23,8 @@ SecondWindow::SecondWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(slotTimerAlarm()));
     timer->start(1000);
 
-    connect(nextTimer, SIGNAL(timeout()), this, SLOT(changeWindow()));
-    nextTimer->start(1000*3);
+    // connect(nextTimer, SIGNAL(timeout()), this, SLOT(changeWindow()));
+    // nextTimer->start(1000*3);
 }
 
 void SecondWindow::slotTimerAlarm()

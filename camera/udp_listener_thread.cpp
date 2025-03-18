@@ -79,8 +79,10 @@ void UDPListenerThread::run()
                 else if (datagram.startsWith("CONNCOMP"))
                 {
                     // 연결 끝나면 보내는 거 필요
-                    emit connCompleteReceived();
+                    qDebug() << "finsh connection";
                     running = false;
+                    emit connCompleteReceived();
+                    
                 }
                 else if (datagram.startsWith("GUIDE"))
                 {
@@ -148,8 +150,8 @@ void UDPListenerThread::run()
                 {
                     // 연결 끝나면 보내는 거 필요
                     qDebug() << "finsh guide";
-                    emit guidecomplete();
                     running = false;
+                    emit guidecomplete();
                 }
 
             //    qDebug() << "UDP 신호 수신됨: " << datagram;
