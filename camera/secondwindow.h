@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTimer>
+#include"udp_listener_thread.h"
 
 namespace Ui {
 class SecondWindow;
@@ -21,6 +22,7 @@ private slots:
     void changeWindow();
 
 private:
+    UDPListenerThread *udp_temporal;
     Ui::SecondWindow *ui;
     QTimer *timer;
     QTimer *nextTimer;

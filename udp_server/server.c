@@ -16,6 +16,8 @@
 #define MAX_CLIENTS 10
 #define FINAL_HEADER "FINIMG"
 #define FINAL_HEADER_LEN 6 
+#define msleep(x) usleep((x) * 1000)
+
 int shooting_count = 0;
 
 
@@ -36,23 +38,13 @@ void* time_sender_thread(void *arg) {
     int sockfd = args->sockfd;
     Client *clients = args->clients; 
     int count = 8;
+    shooting_count = 0;
 
     char time_buf[100];
     while (1) {
         snprintf(time_buf, sizeof(time_buf), "CNT%d", count);
         printf("Count 전송 : %s\n", time_buf);
         broadcast_message(sockfd, clients, time_buf);
-        
-        if (count == 0)
-        {
-            broadcast_message(sockfd, clients, "CAPT");
-            count = 9;
-            shooting_count += 1;
-        }
-        if (shooting_count == 8)
-        {
-            break;
-        }
         
         if (count == 0)
         {
@@ -97,9 +89,6 @@ void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, 
             
                 if(sendto(sockfd, send_buffer, send_len, 0,(struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr)) == -1){
                     printf("Connection Error: %d (%s)\n", errno, strerror(errno));
-                }
-                else{
-                    printf("success\n");
                 }
             }
             
@@ -280,12 +269,18 @@ int main() {
     char filename2[100];
     FILE *fp2 = NULL;
     int receiving_image2 = 0;
+    char filename_final[100];
+    FILE *fp_final = NULL;
+    int receiving_image_final = 0;
     Client clients[MAX_CLIENTS] = {0,};
     char header[5] = {0};
     int count = 0;
     char msg[MAX_MSG_LEN] = {0,};
     int jpg_size = 0;
     unsigned char *jpg_data = NULL;
+    char guide_name[7] = {0,};
+    int guide_flag = 0;
+    Client clients_temp[MAX_CLIENTS] = {0,};
 
 
     const char* img1 = "img_client1_1.jpg";
@@ -331,34 +326,37 @@ int main() {
             if(find_client(clients, &client_addr) == -1){
                 add_client(clients,&client_addr); //클라이언트 추가   
                 client_index = find_client(clients, &client_addr);
-                sprintf(msg, "CLI%d", client_index + 1);
+                // sprintf(msg, "CLI%d", client_index + 1);
                 clients[client_index].addr.sin_port = htons(SERVER_PORT);
-                sleep(1); // 충분한 설정시간 줌
-                send_message(sockfd, clients[client_index].addr, msg);
-
+                msleep(200);  // 충분한 설정시간 줌
+                if (client_index == 1){
+                    // broadcast_message(sockfd, clients, "CONNCOMP");
+                    broadcast_message(sockfd, clients, guide_name);
+                    send_message(sockfd, clients[0].addr, "CLI1");
+                    send_message(sockfd, clients[1].addr, "CLI2");
+                    pthread_t tid;
+                    struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
+                    args->sockfd = sockfd;
+                    memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
+                    if(client_index == 1){
+                        if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
+                        {
+                            perror("타임 스레드 생성 실패");
+                            free(args);
+                        } 
+                        else
+                        {
+                            pthread_detach(tid); // 메모리 자동 회수
+                        }
+                    }
+                    continue;
+                }
                 printf("클라이언트 추가됨: %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             }
             // client_found = 1;
-            
-            pthread_t tid;
-            struct ThreadArgs *args = malloc(sizeof(struct ThreadArgs));
-            args->sockfd = sockfd;
-            memcpy(args->clients, clients, sizeof(Client) * MAX_CLIENTS);
-            if(client_index == 1){
-                if (pthread_create(&tid, NULL, time_sender_thread, args) != 0)
-                {
-                    perror("타임 스레드 생성 실패");
-                    free(args);
-                } 
-                else
-                {
-                    pthread_detach(tid); // 메모리 자동 회수
-                }
-            }
-            continue;
         }
         // "EOF" 수신 시 이미지 저장 종료
-        if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
+        else if (recv_len >= 6 && strncmp(buffer, "EOFCAP", 6) == 0) {
             if (strncmp(buffer, "EOFCAP1", 7) == 0 && fp) {
                 fclose(fp);
                 fp = NULL;
@@ -388,7 +386,7 @@ int main() {
             continue;
         }
 
-        if (strncmp(header, "CAP1", 4) == 0)
+        else if (strncmp(header, "CAP1", 4) == 0)
         {
             // 저장: CAPn
             if (!fp && !receiving_image) {
@@ -431,6 +429,84 @@ int main() {
         else if (strncmp(header, "IMG2", 4) == 0 || strncmp(buffer, "EOFIMG2", 7) == 0)
         {
             sendto(sockfd, buffer, recv_len, 0,(struct sockaddr*)&clients[0].addr, sizeof(clients[0].addr));
+        }
+        else if (recv_len >= 5 && strncmp(buffer, "GUIDE", 5) == 0 && guide_flag == 0)
+        {
+            guide_flag = 1;
+            strncpy(guide_name, buffer, 6);
+        }
+        else if (recv_len >= 4 && strncmp(buffer, "TEMP", 4) == 0 ){
+            if(find_client(clients_temp, &client_addr) == -1)
+            {
+                add_client(clients_temp, &client_addr); //클라이언트 추가   
+                client_index = find_client(clients_temp, &client_addr);
+                // sprintf(msg, "CLI%d", client_index + 1);
+                clients_temp[client_index].addr.sin_port = htons(SERVER_PORT);
+                msleep(200); // 충분한 설정시간 줌
+                if (client_index == 1)
+                {
+                    printf("broadcast\n");
+                    broadcast_message(sockfd, clients_temp, "CONNCOMP");    
+                }
+            }
+        }
+        else if (recv_len >= 4 && strncmp(buffer, "DECO", 4) == 0 ){
+            if (!fp_final && !receiving_image_final) {
+                // 현재 시간 기반 파일명 생성
+                time_t now = time(NULL);
+                struct tm *t = localtime(&now);
+                strftime(filename_final, sizeof(filename_final), "image_%Y%m%d_%H%M%S.jpg", t);
+        
+                fp_final = fopen(filename_final, "wb");
+                if (!fp_final) {
+                    perror("파일 열기 실패");
+                    break;
+                }
+                printf("이미지 저장 시작합니다: %s\n", filename);
+            }
+            receiving_image_final = 1;
+            if (fp_final) {
+                fwrite(buffer + 4, 1, recv_len - 4, fp_final);
+            }
+        }
+        else if (strncmp(buffer, "EOFDECO", 7) == 0) {
+            // 마지막 파일 닫은 뒤 변수 초기화(안해줘도 되는 변수도 있지만 다 초기화)
+            if (fp_final)
+            {
+                fclose(fp_final);
+                fp_final = NULL;
+            }
+
+            receiving_image = 0;
+            receiving_image2 = 0;
+            receiving_image_final = 0;
+            count = 0;
+            jpg_size = 0;
+
+            jpg_data = NULL;
+            guide_flag = 0;
+            receiving_image_final = 0;
+            memset(&clients, 0, sizeof(clients));
+            memset(&clients_temp, 0, sizeof(clients_temp));
+
+            memset(guide_name, 0, sizeof(guide_name));
+            memset(buffer, 0, sizeof(buffer));
+            memset(filename, 0,sizeof(filename));
+            memset(filename2, 0, sizeof(filename2));
+            memset(filename_final, 0, sizeof(filename_final));
+            memset(header, 0, sizeof(header));
+            memset(msg, 0, sizeof(msg));
+
+            if (fp)
+            {
+                fclose(fp);
+                fp = NULL;
+            }
+            if (fp2)
+            {
+                fclose(fp2);
+                fp2 = NULL;
+            }
         }
 
     }

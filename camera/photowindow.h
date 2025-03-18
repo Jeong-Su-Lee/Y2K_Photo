@@ -5,11 +5,14 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QPixmap>
+#include <QString>
 #include <QLabel>
 #include "camerathread.h"
 #include "udp_listener_thread.h"
 #include "udp_sender_thread.h"
 #include "camerasoundplayer.h"
+#include "imageprocessworker.h"
+#include <QThread>
 
 #define TIME_LIMIT 8
 
@@ -25,6 +28,8 @@ public:
     explicit PhotoWindow(QWidget *parent = 0);
     ~PhotoWindow();
     QString myclientId; // 전역 멤버로 선언
+    QThread *imageThread;
+    ImageProcessorWorker *imageWorker;
 
 
 private slots:
@@ -53,9 +58,14 @@ private:
     uchar *image_buf;
     int front_index;
     int number_of_guide =2;
+    QString guidename;
 
 private slots:
     void onClientIdReceived(const QString& id);
+    void setGuideFromChar(QChar guideChar);
+    void onFrameProcessed(const QPixmap &pixmap);
+signals:
+    void requestFrameProcessing(QByteArray frameData, int width, int height, QString guideName, QString clientId);
 protected:
     void closeEvent(QCloseEvent *event) override;
 

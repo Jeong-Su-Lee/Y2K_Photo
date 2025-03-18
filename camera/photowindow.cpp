@@ -2,6 +2,7 @@
 #include "ui_photowindow.h"
 #include "endingwindow.h"
 #include "imagefilter2.h"
+#include "imageprocessworker.h"
 #include <QString>
 #include <QBuffer>
 #include <QFile>
@@ -25,9 +26,23 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
     camera->start();
 
     udp_listener = new UDPListenerThread(this);
+    QUdpSocket udpSocket;
+
+    QByteArray datagram = "CONN";
+    QHostAddress targetIp("192.168.10.2");
+    quint16 targetPort = 25000;
+
+    qint64 bytes = udpSocket.writeDatagram(datagram, targetIp, targetPort);
+
+    qDebug() << "UDP 전송됨:" << datagram << ", 바이트 수:" << bytes;
+
+    if (bytes == -1) {
+        qDebug() << "UDP 전송 에러:" << udpSocket.errorString();
+    }
     connect(udp_listener, &UDPListenerThread::captureRequested, this, &PhotoWindow::save_current_frame);
     connect(udp_listener, &UDPListenerThread::clientIdReceived, this, &PhotoWindow::onClientIdReceived);
     connect(udp_listener, &UDPListenerThread::timeCountReceived, this, &PhotoWindow::change_timeText);
+    connect(udp_listener, &UDPListenerThread::GuideReceived, this, &PhotoWindow::setGuideFromChar);
 
 
 
@@ -35,8 +50,29 @@ PhotoWindow::PhotoWindow(QWidget *parent) :
     connect(udp_listener, &UDPListenerThread::finalImageReceived, this, &PhotoWindow::go_to_nextWindow);
 
     udp_listener->start();
-}
 
+    imageThread = new QThread(this);
+    imageWorker = new ImageProcessorWorker();
+
+    imageWorker->moveToThread(imageThread);
+    connect(imageThread, &QThread::finished, imageWorker, &QObject::deleteLater);
+
+   // 프레임 처리 요청
+    connect(this, &PhotoWindow::requestFrameProcessing, imageWorker, &ImageProcessorWorker::processFrame);
+
+   // 처리 완료 수신
+    connect(imageWorker, &ImageProcessorWorker::frameProcessed, this, &PhotoWindow::onFrameProcessed);
+
+    imageThread->start();
+}
+void PhotoWindow::onFrameProcessed(const QPixmap &pixmap)
+ {
+    if (myclientId == "CLI1") {
+        ui->lblImg->setPixmap(pixmap);
+    } else if (myclientId == "CLI2") {
+        ui->lblImg2->setPixmap(pixmap);
+    }
+ }
 
 void PhotoWindow::toggle_grid(QLabel *lbl){
     QString styleSheet = lbl->styleSheet();
@@ -134,7 +170,7 @@ PhotoWindow::~PhotoWindow()
 
 
 void PhotoWindow::displayReceivedImage(const QImage &image) {
-   QPixmap pixmap = QPixmap::fromImage(image);
+   QPixmap pixmap = QPixmap::fromImage(image.mirrored(true,false));
 //    qDebug() << "UDP IMG Display ";
    if (myclientId == "CLI1")
    {
@@ -163,7 +199,7 @@ void PhotoWindow::onClientIdReceived(const QString& id) {
    qDebug() << "클라이언트 ID 할당됨:" << myclientId;
    senderThread = new SenderThread(myclientId, this);
    senderThread->start();
-   QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
+//    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
    if (myclientId == "CLI1"){
        number_of_guide = 1;
    }
@@ -203,14 +239,15 @@ void PhotoWindow::handle_data(const uchar *data, int width, int height)
    QPixmap pixmap = QPixmap::fromImage(image);
    if (myclientId == "CLI1")
    {
-       ui->lblImg->setPixmap(pixmap);
-       senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+    //    ui->lblImg->setPixmap(pixmap);
+       senderThread->enqueueImage(image);
    }
    else if (myclientId == "CLI2")
    {
-       ui->lblImg2->setPixmap(pixmap);
-       senderThread->enqueueImage(QImage(image_buf, width, height, QImage::Format_RGB888));
+    //    ui->lblImg2->setPixmap(pixmap);
+       senderThread->enqueueImage(image);
    }
+   emit requestFrameProcessing(QByteArray(reinterpret_cast<const char*>(data), width * height * 2), width, height, guidename, myclientId);
 
 }
 
@@ -289,7 +326,7 @@ void PhotoWindow::yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb)
 
 void PhotoWindow::save_current_frame()
 {
-   QImage image(image_buf, 640, 480, QImage::Format_RGB888);
+   QImage image(image_buf, 320, 240, QImage::Format_RGB888);
    mCameraSoundPlayer.startMusic();
    // senderThread->enqueueImage(image);
    QUdpSocket udpSocket;
@@ -312,6 +349,8 @@ void PhotoWindow::save_current_frame()
        QByteArray imageData;
        QBuffer buffer(&imageData);
        buffer.open(QIODevice::WriteOnly);
+       image = image.mirrored(true, false);
+       image = image.scaled(640, 480, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
        image.save(&buffer, "JPG");
 
        int offset = 0;
@@ -332,7 +371,7 @@ void PhotoWindow::save_current_frame()
        udpSocket.writeDatagram(prefix_eof.toUtf8(), serverAddress, serverPort);
        // qDebug() << "이미지 전송 완료";
    }
-   QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
+//    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
    number_of_guide += 2;
    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
    QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
@@ -384,3 +423,19 @@ void PhotoWindow::sendImageToServer(const QString& filePath)
     qDebug() << "이미지 전송 완료.";
 }
 
+void PhotoWindow::setGuideFromChar(QChar guideChar)
+{
+    if(guideChar == "H"){
+        guidename = "heart";
+    }
+    else if(guideChar == "L"){
+        guidename = "lg_logo";
+    }
+    else if(guideChar == "S"){
+        guidename = "star";
+    }
+    else{
+        guidename ="none";
+    }
+    qDebug() << "[MainWindow] 가이드 이미지 이름 설정됨:" << guidename;
+}

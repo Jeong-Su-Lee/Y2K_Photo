@@ -2,6 +2,7 @@
 #include "ui_guideselectwindow.h"
 #include "photowindow.h"
 #include "imagefilter2.h"
+#include <QUdpSocket>
 
 GuideSelectWindow::GuideSelectWindow(QWidget *parent) :
     QWidget(parent),
@@ -33,19 +34,43 @@ GuideSelectWindow::~GuideSelectWindow()
 void GuideSelectWindow::on_btnNone_clicked()
 {
     // handle on clicked "None" guide
+    QUdpSocket udpSender;
+    QHostAddress serverAddress("192.168.10.2"); // 서버 IP
+    quint16 serverPort = 25000;
+
+
+    udpSender.writeDatagram("GUIDEN", serverAddress, serverPort);
 }
 
 void GuideSelectWindow::on_btnHeart_clicked()
 {
     // handle on clicked "Heart" guide
+    QUdpSocket udpSender;
+    QHostAddress serverAddress("192.168.10.2"); // 서버 IP
+    quint16 serverPort = 25000;
+
+
+    udpSender.writeDatagram("GUIDEH", serverAddress, serverPort);
 }
 
 void GuideSelectWindow::on_btnStar_clicked()
 {
     // handle on clicked "Star" guide
+    QUdpSocket udpSender;
+    QHostAddress serverAddress("192.168.10.2"); // 서버 IP
+    quint16 serverPort = 25000;
+
+
+    udpSender.writeDatagram("GUIDES", serverAddress, serverPort);
 }
 
 void GuideSelectWindow::on_btnLG_clicked()
 {
     // handle on clicked "LG logo" guide
+    QUdpSocket udpSender;
+    QHostAddress serverAddress("192.168.10.2"); // 서버 IP
+    quint16 serverPort = 25000;
+
+
+    udpSender.writeDatagram("GUIDEL", serverAddress, serverPort);
 }

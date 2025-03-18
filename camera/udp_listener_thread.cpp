@@ -12,22 +12,23 @@ UDPListenerThread::UDPListenerThread(QObject *parent)
 {
     udpSocket = new QUdpSocket(this);
 
-    QByteArray datagram = "CONN";
-    QHostAddress targetIp("192.168.10.2");
-    quint16 targetPort = 25000;
+//    QByteArray datagram = "CONN";
+//    QHostAddress targetIp("192.168.10.2");
+//    quint16 targetPort = 25000;
 
-    qint64 bytes = udpSocket->writeDatagram(datagram, targetIp, targetPort);
+//    qint64 bytes = udpSocket->writeDatagram(datagram, targetIp, targetPort);
 
-    qDebug() << "UDP 전송됨:" << datagram << ", 바이트 수:" << bytes;
+//    qDebug() << "UDP 전송됨:" << datagram << ", 바이트 수:" << bytes;
 
-    if (bytes == -1) {
-        qDebug() << "UDP 전송 에러:" << udpSocket->errorString();
-    }
+//    if (bytes == -1) {
+//        qDebug() << "UDP 전송 에러:" << udpSocket->errorString();
+//    }
 }
 
 UDPListenerThread::~UDPListenerThread()
 {
     running = false;
+    qDebug() << "UDP 종료:" << udpSocket->errorString();
     if (udpSocket) {
         udpSocket->close();
         delete udpSocket;
@@ -75,8 +76,20 @@ void UDPListenerThread::run()
                     qDebug() << "[클라] CNT 수신 중 " << timeCount << "\n";
                     emit timeCountReceived(timeCount);
                 }
+                else if (datagram.startsWith("CONNCOMP"))
+                {
+                    // 연결 끝나면 보내는 거 필요
+                    emit connCompleteReceived();
+                    running = false;
+                }
+                else if (datagram.startsWith("GUIDE"))
+                {
+                    // 연결 끝나면 보내는 거 필요
+                    QChar guideChar(datagram[5]);
+                    emit GuideReceived(guideChar);
+                }
                 // 마지막이므로 카메라 끄고, 이미지 받을 준비함
-                if (datagram.startsWith("FINIMG")) {
+                else if (datagram.startsWith("FINIMG")) {
                     if (!receivingFinalImage) {
                         // Only clear the buffer when starting to receive a new image
                         receivingFinalImage = true;
@@ -115,7 +128,8 @@ void UDPListenerThread::run()
                     QImage image;
 
                     if (image.loadFromData(incomingImageBuffer, "JPG")) {
-                        emit imageReceived(image); // MainWindow로 시그널 emit
+                        image = image.scaled(640, 480, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                        emit imageReceived(image); // MainWindow로 시그널 emit 
                     } else {
 //                        qDebug() << "[UDP] 이미지 디코딩 실패";
                     }
@@ -131,7 +145,7 @@ void UDPListenerThread::run()
                     incomingImageBuffer.append(datagram.mid(4)); // "IMG1" 이후가 JPG 데이터
                 }
 
-//                qDebug() << "UDP 신호 수신됨: " << datagram;
+            //    qDebug() << "UDP 신호 수신됨: " << datagram;
 
 
             }

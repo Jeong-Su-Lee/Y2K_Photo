@@ -19,6 +19,8 @@ signals:
     void imageReceived(const QImage &image);
     void timeCountReceived(const int timeCount);
     void finalImageReceived();
+    void connCompleteReceived();
+    void GuideReceived(QChar guideChar); 
 
 protected:
     void run() override;
