@@ -1,7 +1,7 @@
 #include "photowindow.h"
 #include "ui_photowindow.h"
 #include "endingwindow.h"
-#include "imagefilter.h"
+#include "imagefilter2.h"
 #include <QString>
 #include <QBuffer>
 #include <QFile>
@@ -50,7 +50,7 @@ void PhotoWindow::toggle_grid(QLabel *lbl){
             lbl->setStyleSheet(styleSheet.left(lastNewlineIndex));
         }
     } else {
-        lbl->setStyleSheet(styleSheet + "\nbackground: #AEE1EF;");
+        lbl->setStyleSheet(styleSheet + "\nbackground: rgba(229, 255, 116, 0.5);");
     }
 }
 
@@ -115,7 +115,7 @@ void PhotoWindow::change_timeText(const int timeCount)
 void PhotoWindow::go_to_nextWindow()
 {
 
-    ImageFilter *imageFilter = new ImageFilter();
+    ImageFilter2 *imageFilter = new ImageFilter2();
     this->hide();
     imageFilter->show();
 

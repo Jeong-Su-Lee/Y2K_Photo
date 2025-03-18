@@ -1,5 +1,5 @@
-#ifndef IMAGEDECORATION_H
-#define IMAGEDECORATION_H
+#ifndef IMAGEDECORATION2_H
+#define IMAGEDECORATION2_H
 
 #include <QWidget>
 #include <QImage>
@@ -9,17 +9,20 @@
 #include <QPen>
 #include <QPair>
 
-class QLabel;
-class QSlider;
 
-class ImageDecoration : public QWidget {
+namespace Ui {
+class ImageDecoration2;
+}
+
+class ImageDecoration2 : public QWidget
+{
     Q_OBJECT
 
 public:
-    explicit ImageDecoration(QWidget *parent = nullptr);
+    explicit ImageDecoration2(QWidget *parent = 0);
+    ~ImageDecoration2();
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
@@ -31,8 +34,13 @@ private slots:
     void saveImage();
     void changeColor(const QColor &color);
     void changeBrushSize(int size);
+    void setPenTypeBasic();
+    void setPenTypeWorm();
+
 
 private:
+    Ui::ImageDecoration2 *ui;
+
     enum PenType {
         BasicPen,
         WormPen
@@ -43,8 +51,6 @@ private:
     QPoint lastPoint;
     QColor currentColor;
     int currentBrushSize;
-    QSlider *brushSizeSlider;
-    QWidget *leftWidget;
 
     QVector<QVector<QPair<QPoint, QPen>>> undoStack;
     QVector<QPair<QPoint, QPen>> currentLine;
@@ -52,6 +58,7 @@ private:
     PenType currentPenType;
 
     void redrawCanvas();
+    void updateCanvas();
 };
 
-#endif // IMAGEDECORATION_H
+#endif // IMAGEDECORATION2_H

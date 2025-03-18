@@ -14,6 +14,21 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QPushButton" name="btnFirst">
      <property name="sizePolicy">
@@ -41,7 +56,17 @@ outline: none;
 border: none;</string>
      </property>
      <property name="text">
-      <string>Please Touch the Screen</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../../nfsroot/images/images.qrc">
+       <normaloff>:/images/firstwindow.png</normaloff>:/images/firstwindow.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>1024</width>
+       <height>600</height>
+      </size>
      </property>
      <property name="default">
       <bool>false</bool>
@@ -53,6 +78,8 @@ border: none;</string>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../../../nfsroot/images/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -1,17 +1,27 @@
 #include "imagefilter.h"
 #include "imagedecoration.h"
 #include <QPainter>
+#include <QPixmap>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QResizeEvent>
 #include <QImage>
+#include <QIcon>
 
 ImageFilter::ImageFilter(QWidget *parent) : QWidget(parent) {
     setMinimumSize(1024, 600);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setStyleSheet("background-color: white;");
+//    setStyleSheet("background-image: url(:/images/imagefilter.png); background-position: center; background-repeat: no-repeat;");
+
+    QPixmap bgImage(":images/imagefilter.png");  // 배경 이미지 로드
+    bgImage = bgImage.scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bgImage);
+    this->setPalette(palette);
+    this->setAutoFillBackground(true);
 
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -27,12 +37,6 @@ ImageFilter::ImageFilter(QWidget *parent) : QWidget(parent) {
     rightWidget->setStyleSheet("background-color: white; border-left: 2px solid #ccc;");
     QVBoxLayout *rightLayout = new QVBoxLayout(rightWidget);
     rightLayout->setAlignment(Qt::AlignCenter);
-
-    QLabel *titleLabel = new QLabel("Filter Photos", this);
-    titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setStyleSheet("font-size: 22px; font-weight: bold; font-family: Arial, sans-serif;");
-    rightLayout->addWidget(titleLabel);
-    rightLayout->addStretch();
 
     QGridLayout *filterLayout = new QGridLayout();
     QVector<QColor> filterColors = {
@@ -51,9 +55,12 @@ ImageFilter::ImageFilter(QWidget *parent) : QWidget(parent) {
     rightLayout->addLayout(filterLayout);
     rightLayout->addStretch();
 
-    QPushButton *saveButton = new QPushButton("Save and Done", this);
-    saveButton->setFixedSize(200, 50);
-    saveButton->setStyleSheet("QPushButton { background-color: #007BFF; color: white; font-size: 16px; font-weight: bold; font-family: Arial, sans-serif; border-radius: 10px; padding: 10px; } QPushButton:hover { background-color: #0056b3; }");
+    QPushButton *saveButton = new QPushButton(this);
+    saveButton->setFixedSize(164, 54);
+    saveButton->setIcon(QIcon(QPixmap(":images/filternextbtn.png")));
+    saveButton->setIconSize(saveButton->size());
+    saveButton->setFlat(true);
+    saveButton->setStyleSheet("border: none; outline: none;");
     connect(saveButton, &QPushButton::clicked, this, &ImageFilter::saveImage);
     rightLayout->addWidget(saveButton);
     rightLayout->addStretch();

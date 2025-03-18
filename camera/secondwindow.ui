@@ -13,23 +13,47 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QLabel" name="lblSecond">
-     <property name="styleSheet">
-      <string notr="true">font: 87 32pt &quot;Noto Sans CJK KR&quot;;
-font-weight: 800;</string>
-     </property>
-     <property name="text">
-      <string>Waiting for the other user...</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-  </layout>
+  <widget class="QLabel" name="lblSecond">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>410</y>
+     <width>610</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 87 24pt &quot;Noto Sans CJK KR&quot;;
+font-weight: 500;</string>
+   </property>
+   <property name="text">
+    <string>Waiting for the other user...</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>600</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../../../../../../nfsroot/images/images.qrc">:/images/secondwindow.png</pixmap>
+   </property>
+  </widget>
+  <zorder>label</zorder>
+  <zorder>lblSecond</zorder>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../../../nfsroot/images/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

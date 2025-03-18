@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     secondwindow.cpp \
     imagedecoration.cpp \
     imagefilter.cpp \
-    udp_sender_thread.cpp
+    udp_sender_thread.cpp \
+    imagefilter2.cpp \
+    imagedecoration2.cpp
 
 HEADERS  += \
     camerathread.h \
@@ -42,14 +44,18 @@ HEADERS  += \
     secondwindow.h \
     imagedecoration.h \
     imagefilter.h \
-    udp_sender_thread.h
+    udp_sender_thread.h \
+    imagefilter2.h \
+    imagedecoration2.h
 
 FORMS    += \
     endingwindow.ui \
     firstwindow.ui \
     guideselectwindow.ui \
     photowindow.ui \
-    secondwindow.ui
+    secondwindow.ui \
+    imagefilter2.ui \
+    imagedecoration2.ui
 
 RESOURCES += \
     ../../../../../../nfsroot/images/images.qrc

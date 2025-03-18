@@ -13,432 +13,483 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,5">
-   <property name="leftMargin">
-    <number>20</number>
+  <widget class="QFrame" name="frame_6">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>600</height>
+    </rect>
    </property>
-   <property name="topMargin">
-    <number>20</number>
+   <property name="styleSheet">
+    <string notr="true">border:none;</string>
    </property>
-   <property name="rightMargin">
-    <number>20</number>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
    </property>
-   <property name="bottomMargin">
-    <number>20</number>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
    </property>
-   <item>
-    <widget class="QFrame" name="frame">
-     <property name="styleSheet">
-      <string notr="true">border: none;</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
-      <property name="spacing">
-       <number>360</number>
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,5">
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="styleSheet">
+       <string notr="true">border: none;</string>
       </property>
-      <property name="bottomMargin">
-       <number>9</number>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <item>
-       <widget class="QFrame" name="frame_3">
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <property name="spacing">
-          <number>0</number>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
+       <property name="spacing">
+        <number>360</number>
+       </property>
+       <property name="leftMargin">
+        <number>40</number>
+       </property>
+       <property name="topMargin">
+        <number>20</number>
+       </property>
+       <property name="rightMargin">
+        <number>52</number>
+       </property>
+       <property name="bottomMargin">
+        <number>9</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_3">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
          </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
-           <property name="styleSheet">
-            <string notr="true">font: 25 28pt &quot;Noto Sans CJK KR&quot;;
-color: gray;</string>
-           </property>
-           <property name="text">
-            <string>/8</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="lblCount">
-           <property name="styleSheet">
-            <string notr="true">font: 25 28pt &quot;Noto Sans CJK KR&quot;;
-color: black;</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFrame" name="frame_4">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border:1px black;</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <property name="leftMargin">
-          <number>0</number>
+         <property name="styleSheet">
+          <string notr="true">border:none;</string>
          </property>
-         <property name="topMargin">
-          <number>0</number>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
          </property>
-         <property name="rightMargin">
-          <number>0</number>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="3">
-          <widget class="QLabel" name="lbl4">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="lbl2">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;
-background: #AEE1EF;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLabel" name="lbl8">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lbl9">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="lbl3">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLabel" name="lbl7">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lbl5">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="lbl12">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="lbl6">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="lbl11">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="lbl10">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl1">
-           <property name="autoFillBackground">
-            <bool>false</bool>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;
-border-bottom: 0;
-background: #AEE1EF;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="lbl13">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="lbl14">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QLabel" name="lbl15">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;
-border-right: 0;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QLabel" name="lbl16">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid gray;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFrame" name="frame_5">
-        <property name="styleSheet">
-         <string notr="true">border:none;</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QLabel" name="lblTime">
-           <property name="styleSheet">
-            <string notr="true">font: 25 28pt &quot;Noto Sans CJK KR&quot;;
-color: black;
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="topMargin">
+           <number>16</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="styleSheet">
+             <string notr="true">font: 25 28pt &quot;Noto Sans CJK KR&quot;;
+font-weight: 400;
+color: #C7CDF4;</string>
+            </property>
+            <property name="text">
+             <string>/8</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lblCount">
+            <property name="styleSheet">
+             <string notr="true">font: 25 28pt &quot;Noto Sans CJK KR&quot;;
+color: white;
 font-weight: 400;</string>
-           </property>
-           <property name="text">
-            <string>59</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame_2">
-     <property name="styleSheet">
-      <string notr="true">border: none;</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <widget class="QLabel" name="lblImg">
-      <property name="geometry">
-       <rect>
-        <x>45</x>
-        <y>68</y>
-        <width>425</width>
-        <height>325</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>425</width>
-        <height>325</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>425</width>
-        <height>325</height>
-       </size>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
+            </property>
+            <property name="text">
+             <string>1</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_4">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border:1px black;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="3">
+           <widget class="QLabel" name="lbl4">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lbl2">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;
+background: rgba(229, 255, 116, 0.5);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="lbl8">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl9">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="lbl3">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="lbl7">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl5">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLabel" name="lbl12">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="lbl6">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="lbl11">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="lbl10">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl1">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;
+border-bottom: 0;
+background: rgba(229, 255, 116, 0.5);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbl13">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLabel" name="lbl14">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLabel" name="lbl15">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+border-right: 0;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLabel" name="lbl16">
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid white;
+</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_5">
+         <property name="styleSheet">
+          <string notr="true">border: none;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="topMargin">
+           <number>16</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lblTime">
+            <property name="styleSheet">
+             <string notr="true">font: 25 28pt &quot;Noto Sans CJK KR&quot;;
+color: white;
+font-weight: 400;</string>
+            </property>
+            <property name="text">
+             <string>8</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
      </widget>
-     <widget class="QLabel" name="lblImg2">
-      <property name="geometry">
-       <rect>
-        <x>512</x>
-        <y>68</y>
-        <width>425</width>
-        <height>325</height>
-       </rect>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame_2">
+      <property name="styleSheet">
+       <string notr="true">border: none;</string>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>425</width>
-        <height>325</height>
-       </size>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>425</width>
-        <height>325</height>
-       </size>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
-      <property name="text">
-       <string/>
-      </property>
+      <widget class="QLabel" name="lblImg">
+       <property name="geometry">
+        <rect>
+         <x>45</x>
+         <y>68</y>
+         <width>425</width>
+         <height>325</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>425</width>
+         <height>325</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>425</width>
+         <height>325</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblImg2">
+       <property name="geometry">
+        <rect>
+         <x>512</x>
+         <y>68</y>
+         <width>425</width>
+         <height>325</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>425</width>
+         <height>325</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>425</width>
+         <height>325</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="guideimg">
+       <property name="geometry">
+        <rect>
+         <x>45</x>
+         <y>68</y>
+         <width>425</width>
+         <height>325</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="guideimg2">
+       <property name="geometry">
+        <rect>
+         <x>521</x>
+         <y>68</y>
+         <width>425</width>
+         <height>325</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </widget>
-     <widget class="QLabel" name="guideimg">
-      <property name="geometry">
-       <rect>
-        <x>45</x>
-        <y>68</y>
-        <width>425</width>
-        <height>325</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="guideimg2">
-      <property name="geometry">
-       <rect>
-        <x>521</x>
-        <y>68</y>
-        <width>425</width>
-        <height>325</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </widget>
-   </item>
-  </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>600</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../../../../../../nfsroot/images/images.qrc">:/images/photowindow.png</pixmap>
+   </property>
+  </widget>
+  <zorder>label_2</zorder>
+  <zorder>frame_6</zorder>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../../../nfsroot/images/images.qrc"/>
+ </resources>
  <connections/>
 </ui>
