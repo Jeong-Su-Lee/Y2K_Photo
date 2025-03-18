@@ -247,7 +247,7 @@ void PhotoWindow::handle_data(const uchar *data, int width, int height)
     //    ui->lblImg2->setPixmap(pixmap);
        senderThread->enqueueImage(image);
    }
-   emit requestFrameProcessing(QByteArray(reinterpret_cast<const char*>(data), width * height * 2), width, height, guidename, myclientId);
+   emit requestFrameProcessing(image.copy(), guidename, myclientId);
 
 }
 

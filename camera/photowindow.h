@@ -65,7 +65,7 @@ private slots:
     void setGuideFromChar(QChar guideChar);
     void onFrameProcessed(const QPixmap &pixmap);
 signals:
-    void requestFrameProcessing(QByteArray frameData, int width, int height, QString guideName, QString clientId);
+    void requestFrameProcessing(QImage image, const QString &guideName, const QString &clientId);
 protected:
     void closeEvent(QCloseEvent *event) override;
 

@@ -13,13 +13,13 @@
  {
  }
 
- void ImageProcessorWorker::processFrame(const QByteArray &data, int width, int height, const QString &guideName, const QString &clientId)
+ void ImageProcessorWorker::processFrame(QImage image, const QString &guideName, const QString &clientId)
  {
      // 1. YUYV → RGB888
-     QByteArray rgbBuf(width * height * 3, 0);
-     yuyv2rgb(reinterpret_cast<const uchar*>(data.constData()), width, height, reinterpret_cast<uchar*>(rgbBuf.data()));
+    //  QByteArray rgbBuf(width * height * 3, 0);
+    //  yuyv2rgb(reinterpret_cast<const uchar*>(data.constData()), width, height, reinterpret_cast<uchar*>(rgbBuf.data()));
 
-     QImage image(reinterpret_cast<uchar*>(rgbBuf.data()), width, height, QImage::Format_RGB888);
+    //  QImage image(reinterpret_cast<uchar*>(rgbBuf.data()), width, height, QImage::Format_RGB888);
      image = image.mirrored(true, false);
      image = image.scaled(640, 480, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 

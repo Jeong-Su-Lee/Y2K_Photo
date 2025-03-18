@@ -14,7 +14,7 @@
      void yuyv_to_rgb_pixel(const uchar *yuyv, uchar *rgb);
 
  public slots:
-     void processFrame(const QByteArray &data, int width, int height, const QString &guideName, const QString &clientId);
+     void processFrame(QImage image, const QString &guideName, const QString &clientId);
 
  signals:
      void frameProcessed(const QPixmap &pixmap, const QString &clientId);
