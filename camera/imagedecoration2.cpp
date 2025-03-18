@@ -204,7 +204,7 @@ void ImageDecoration2::setPenTypeBasic() {
     if (currentPenType == BasicPen) return;
     currentPenType = BasicPen;
     ui->basicPenButton->setIcon(QIcon(":/images/solidactive.png"));
-    ui->wormPenButton->setIcon(QIcon(":/images/worminactive.png"));
+    ui->wormPenButton->setIcon(QIcon(":/images/dotinactive.png"));
 }
 
 void ImageDecoration2::setPenTypeWorm() {
