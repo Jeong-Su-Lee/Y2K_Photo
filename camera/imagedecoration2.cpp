@@ -50,7 +50,7 @@ ImageDecoration2::ImageDecoration2(QWidget *parent) :
     connect(ui->saveButton, &QPushButton::clicked, this, &ImageDecoration2::saveImage);
 
 
-    if (!image.load("/mnt/nfs/filtered_image.jpg")) {
+    if (!image.load("/mnt/sd/filtered_image.jpg")) {
         qWarning("Failed to load image!");
     }
     image = image.scaled(785, 600, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -184,7 +184,7 @@ void ImageDecoration2::saveImage() {
     QPainter painter(&finalImage);
     painter.drawImage(0, imageY, image);
     painter.drawImage(0, imageY, canvas);
-    finalImage.save("decorated_image.jpg", "JPG");
+    finalImage.save("/mnt/sd/decorated_image.jpg", "JPG");
 
     EndingWindow *endingWindow = new EndingWindow();
     this->hide();

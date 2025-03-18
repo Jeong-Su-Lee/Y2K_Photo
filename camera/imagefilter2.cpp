@@ -41,7 +41,7 @@ ImageFilter2::ImageFilter2(QWidget *parent) :
         connect(filterButtons[i], &QPushButton::clicked, this, [=]() { applyFilter(i); });
     }
 
-    if (!image.load("/mnt/nfs/final.jpg")) {
+    if (!image.load("/mnt/sd/final.jpg")) {
         qWarning("Failed to load image!");
     }
     image = image.scaled(785, 600, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -110,7 +110,7 @@ void ImageFilter2::saveImage() {
 
     QPainter painter(&finalImage);
     painter.drawImage(0, topBottomMargin, filteredImage);
-    finalImage.save("filtered_image.jpg", "JPG");
+    finalImage.save("/mnt/sd/filtered_image.jpg", "JPG");
 
     ImageDecoration2 *imageDecoration = new ImageDecoration2();
     this->hide();

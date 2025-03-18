@@ -48,7 +48,7 @@ void UDPListenerThread::run()
 
     qDebug() << "UDP 수신 대기 중... 포트:" << port;
     incomingImageBuffer.clear();
-    QFile file("/mnt/nfs/final.jpg");
+    QFile file("/mnt/sd/final.jpg");
     QByteArray FinalimageBuffer;
     bool receivingFinalImage = false;
 
@@ -102,7 +102,7 @@ void UDPListenerThread::run()
                 else if (QString(datagram) == "EOFFIN") {
                     if (receivingFinalImage) {
                         QImage Finalimage;
-                        QString filename = "/mnt/nfs/final.jpg"; // 추후 경로 수정 필요
+                        QString filename = "/mnt/sd/final.jpg"; // 추후 경로 수정 필요
                         if (Finalimage.loadFromData(FinalimageBuffer)) {
                             if (Finalimage.save(filename, "JPG")) {
                                 qDebug() << "[클라이언트] 이미지 저장 성공:" << filename;

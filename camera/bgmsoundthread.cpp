@@ -23,7 +23,7 @@ void BgmSoundThread::startMusic()
         playProcess->terminate();
         playProcess->waitForFinished();
     }
-    playProcess->start("sh", QStringList() << "-c" << "./aplay -Dhw:0,0 /mnt/nfs/bgm_sound.wav");
+    playProcess->start("sh", QStringList() << "-c" << "aplay -Dhw:0,0 /mnt/sd/sound/bgm_sound.wav");
 }
 
 void BgmSoundThread::stopMusic()

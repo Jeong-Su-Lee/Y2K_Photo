@@ -116,7 +116,7 @@ ImageDecoration::ImageDecoration(QWidget *parent) : QWidget(parent), currentBrus
     rightLayout->addLayout(buttonLayout);
     mainLayout->addWidget(rightWidget);
 
-    if (!image.load("/mnt/nfs/test_image_jpgtype.jpg")) {
+    if (!image.load("/mnt/sd/test_image_jpgtype.jpg")) {
         qWarning("Failed to load image!");
     }
     image = image.scaled(785, 600, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -237,7 +237,7 @@ void ImageDecoration::saveImage() {
     QPainter painter(&finalImage);
     painter.drawImage(0, imageY, image);
     painter.drawImage(0, imageY, canvas);
-    finalImage.save("decorated_image.jpg", "JPG");
+    finalImage.save("/mnt/sd/decorated_image.jpg", "JPG");
 }
 
 void ImageDecoration::changeColor(const QColor &color) {

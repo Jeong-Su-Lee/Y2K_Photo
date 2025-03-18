@@ -19,7 +19,7 @@ EndingWindow::EndingWindow(QWidget *parent) :
     ui->setupUi(this);
 
     QImage image;
-    if (!image.load("/mnt/nfs/decorated_image.jpg")) {
+    if (!image.load("/mnt/sd/decorated_image.jpg")) {
         qWarning("Failed to load image!");
     }
     image = image.scaled(430, 329, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -54,7 +54,7 @@ void EndingWindow::on_btnEnding_clicked()
     QBuffer buffer(&imageData);
     QImage image;
     QUdpSocket udpSocket;
-    if (!image.load("/mnt/nfs/decorated_image.jpg")){
+    if (!image.load("/mnt/sd/decorated_image.jpg")){
         qDebug() << "fail to load image";
     }
     int offset = 0;
