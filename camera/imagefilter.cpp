@@ -113,7 +113,7 @@ void ImageFilter::saveImage() {
 
     QPainter painter(&finalImage);
     painter.drawImage(0, topBottomMargin, filteredImage);
-    finalImage.save("filtered_image.jpg", "JPG");
+    finalImage.save("/mnt/sd/filtered_image.jpg", "JPG");
 
     ImageDecoration *imageDecoration = new ImageDecoration();
     this->hide();
