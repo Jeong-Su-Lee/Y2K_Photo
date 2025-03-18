@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTimer>
+#include"udp_listener_thread.h"
 
 namespace Ui {
 class GuideSelectWindow;
@@ -18,8 +19,6 @@ public:
 
 
 private slots:
-    void go_to_nextWindow();
-
     void on_btnNone_clicked();
 
     void on_btnHeart_clicked();
@@ -28,7 +27,10 @@ private slots:
 
     void on_btnLG_clicked();
 
+    void go_to_nextWindow();
+
 private:
+    UDPListenerThread *udp_guide;
     Ui::GuideSelectWindow *ui;
     QTimer *timer;
 };

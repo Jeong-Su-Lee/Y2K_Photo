@@ -20,6 +20,7 @@ signals:
     void timeCountReceived(const int timeCount);
     void finalImageReceived();
     void connCompleteReceived();
+    void guidecomplete();
     void GuideReceived(QChar guideChar); 
 
 protected:

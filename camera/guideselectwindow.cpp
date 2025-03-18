@@ -11,17 +11,36 @@ GuideSelectWindow::GuideSelectWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(timer, SIGNAL(timeout()), this, SLOT(go_to_nextWindow()));
-    timer->start(1000*4);
+    udp_guide = new UDPListenerThread(this);
+    connect(udp_guide, &UDPListenerThread::guidecomplete, this, &GuideSelectWindow::go_to_nextWindow);
+    QUdpSocket udpSocket;
+
+    QByteArray datagram = "SELG";
+    QHostAddress targetIp("192.168.10.2");
+    quint16 targetPort = 25000;
+
+    udpSocket.writeDatagram(datagram, targetIp, targetPort);
+    udp_guide->start();
+
+    // connect(timer, SIGNAL(timeout()), this, SLOT(go_to_nextWindow()));
+    // timer->start(1000*4);
 }
 
 void GuideSelectWindow::go_to_nextWindow()
 {
+    if(udp_guide)
+    {
+        udp_guide->quit();
+        udp_guide->wait();
+        delete udp_guide;
+    }
     PhotoWindow *photoWindow = new PhotoWindow();
+    qDebug() << "go to next";
     this->hide();
     photoWindow->show();
 
-    timer->stop();
+    
+    // timer->stop();
 }
 
 GuideSelectWindow::~GuideSelectWindow()
@@ -37,6 +56,7 @@ void GuideSelectWindow::on_btnNone_clicked()
     QUdpSocket udpSender;
     QHostAddress serverAddress("192.168.10.2"); // 서버 IP
     quint16 serverPort = 25000;
+    qDebug() << "NONE";
 
 
     udpSender.writeDatagram("GUIDEN", serverAddress, serverPort);
@@ -48,6 +68,7 @@ void GuideSelectWindow::on_btnHeart_clicked()
     QUdpSocket udpSender;
     QHostAddress serverAddress("192.168.10.2"); // 서버 IP
     quint16 serverPort = 25000;
+    qDebug() << "HEART";
 
 
     udpSender.writeDatagram("GUIDEH", serverAddress, serverPort);
@@ -59,6 +80,7 @@ void GuideSelectWindow::on_btnStar_clicked()
     QUdpSocket udpSender;
     QHostAddress serverAddress("192.168.10.2"); // 서버 IP
     quint16 serverPort = 25000;
+    qDebug() << "STAR";
 
 
     udpSender.writeDatagram("GUIDES", serverAddress, serverPort);
@@ -70,7 +92,7 @@ void GuideSelectWindow::on_btnLG_clicked()
     QUdpSocket udpSender;
     QHostAddress serverAddress("192.168.10.2"); // 서버 IP
     quint16 serverPort = 25000;
-
+    qDebug() << "LG_LOGO";
 
     udpSender.writeDatagram("GUIDEL", serverAddress, serverPort);
 }

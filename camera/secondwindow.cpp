@@ -38,13 +38,19 @@ void SecondWindow::slotTimerAlarm()
 
 void SecondWindow::changeWindow()
 {
+    if(udp_temporal)
+    {
+        udp_temporal->quit();
+        udp_temporal->wait();
+        delete udp_temporal;
+    }
     GuideSelectWindow *guideSelectWindow = new GuideSelectWindow();
     this->hide();
-    guideSelectWindow->show();
 
+    guideSelectWindow->show();
     timer->stop();
     nextTimer->stop();
-    delete udp_temporal;
+
 }
 
 SecondWindow::~SecondWindow()

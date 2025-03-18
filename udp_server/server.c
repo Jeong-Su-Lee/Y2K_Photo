@@ -434,6 +434,8 @@ int main() {
         {
             guide_flag = 1;
             strncpy(guide_name, buffer, 6);
+            msleep(200);
+            broadcast_message(sockfd, clients_temp, "SELG");            
         }
         else if (recv_len >= 4 && strncmp(buffer, "TEMP", 4) == 0 ){
             if(find_client(clients_temp, &client_addr) == -1)
@@ -446,7 +448,9 @@ int main() {
                 if (client_index == 1)
                 {
                     printf("broadcast\n");
-                    broadcast_message(sockfd, clients_temp, "CONNCOMP");    
+                    broadcast_message(sockfd, clients_temp, "CONNCOMP");
+                    memset(&clients_temp, 0, sizeof(clients_temp));
+                    msleep(100);
                 }
             }
         }
@@ -506,6 +510,16 @@ int main() {
             {
                 fclose(fp2);
                 fp2 = NULL;
+            }
+        }
+        else if (recv_len >= 4 && strncmp(buffer, "SELG", 4) == 0 ){
+            if(find_client(clients_temp, &client_addr) == -1)
+            {
+                add_client(clients_temp, &client_addr); //클라이언트 추가   
+                client_index = find_client(clients_temp, &client_addr);
+                // sprintf(msg, "CLI%d", client_index + 1);
+                clients_temp[client_index].addr.sin_port = htons(SERVER_PORT);
+                msleep(100);
             }
         }
 

@@ -144,6 +144,13 @@ void UDPListenerThread::run()
                     receivingImage = true;
                     incomingImageBuffer.append(datagram.mid(4)); // "IMG1" 이후가 JPG 데이터
                 }
+                else if (datagram.startsWith("SELG"))
+                {
+                    // 연결 끝나면 보내는 거 필요
+                    qDebug() << "finsh guide";
+                    emit guidecomplete();
+                    running = false;
+                }
 
             //    qDebug() << "UDP 신호 수신됨: " << datagram;
 
