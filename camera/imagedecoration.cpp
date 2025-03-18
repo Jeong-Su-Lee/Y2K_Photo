@@ -107,7 +107,7 @@ ImageDecoration::ImageDecoration(QWidget *parent) : QWidget(parent), currentColo
     mainLayout->addWidget(rightWidget);
 
     // 이미지 로드
-    if (!image.load("/mnt/nfs/filtered_image.jpg")) {
+    if (!image.load("/mnt/sd/filtered_image.jpg")) {
         qWarning("Failed to load image!");
     }
     image = image.scaled(785, 600, Qt::KeepAspectRatio, Qt::SmoothTransformation);

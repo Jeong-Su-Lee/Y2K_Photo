@@ -23,7 +23,8 @@ void CameraSoundThread::startMusic()
         playProcess->terminate();
         playProcess->waitForFinished();
     }
-    playProcess->start("sh", QStringList() << "-c" << "./aplay -Dhw:0,0 /mnt/nfs/test_contents/camera_capture_1.wav");
+    //playProcess->start("sh", QStringList() << "-c" << "./aplay -Dhw:0,0 /mnt/nfs/sound/camera_capture_1.wav");
+    playProcess->start("sh", QStringList() << "-c" << "./aplay -Dhw:0,0 /mnt/sd/sound/camera_capture_1.wav");
 }
 
 void CameraSoundThread::stopMusic()

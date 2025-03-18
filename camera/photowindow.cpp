@@ -204,7 +204,8 @@ void PhotoWindow::onClientIdReceived(const QString& id) {
    }
 
    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
-   QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
+   //QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
+   QString filename = "/mnt/sd/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
    overlay_pixmap = QPixmap(filename);
    QImage image_overlay = overlay_pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
 
@@ -373,7 +374,8 @@ void PhotoWindow::save_current_frame()
 //    QString guidename = "heart"; // 가이드 뭐인지 받는 부분 필요
    number_of_guide += 2;
    QString guidenum = QString::number(number_of_guide); // 몇번 클라이언트인지에 따라 count 수 다르게 할 필요 있음
-   QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
+   //QString filename = "/mnt/nfs/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
+   QString filename = "/mnt/sd/guide/guide_" + guidename + "/" + guidenum + "_" +  guidename + ".png";
    overlay_pixmap = QPixmap(filename);
    QImage image_overlay = overlay_pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
 

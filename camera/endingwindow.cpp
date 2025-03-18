@@ -17,7 +17,7 @@ EndingWindow::EndingWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QPixmap pixmap("/mnt/nfs/decorated_image.jpg"); // image 로드
+    QPixmap pixmap("/mnt/sd/decorated_image.jpg"); // image 로드
 
     if (pixmap.isNull()) {
         ui->lblImg->setText("이미지를 불러올 수 없습니다.");
@@ -49,7 +49,7 @@ void EndingWindow::on_btnEnding_clicked()
     QBuffer buffer(&imageData);
     QImage image;
     QUdpSocket udpSocket;
-    if (!image.load("/mnt/nfs/decorated_image.jpg")){
+    if (!image.load("/mnt/sd/decorated_image.jpg")){
         qDebug() << "fail to load image";
     }
     int offset = 0;
