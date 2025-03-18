@@ -37,7 +37,8 @@ void* time_sender_thread(void *arg) {
     struct ThreadArgs *args = (struct ThreadArgs *)arg;
     int sockfd = args->sockfd;
     Client *clients = args->clients; 
-    int count = 8;
+    int count = 1;
+    shooting_count = 0;
 
     char time_buf[100];
     while (1) {
@@ -48,18 +49,7 @@ void* time_sender_thread(void *arg) {
         if (count == 0)
         {
             broadcast_message(sockfd, clients, "CAPT");
-            count = 9;
-            shooting_count += 1;
-        }
-        if (shooting_count == 8)
-        {
-            break;
-        }
-        
-        if (count == 0)
-        {
-            broadcast_message(sockfd, clients, "CAPT");
-            count = 9;
+            count = 1;
             shooting_count += 1;
         }
         if (shooting_count == 8)
@@ -99,9 +89,6 @@ void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, 
             
                 if(sendto(sockfd, send_buffer, send_len, 0,(struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr)) == -1){
                     printf("Connection Error: %d (%s)\n", errno, strerror(errno));
-                }
-                else{
-                    printf("success\n");
                 }
             }
             
@@ -282,6 +269,9 @@ int main() {
     char filename2[100];
     FILE *fp2 = NULL;
     int receiving_image2 = 0;
+    char filename_final[100];
+    FILE *fp_final = NULL;
+    int receiving_image_final = 0;
     Client clients[MAX_CLIENTS] = {0,};
     char header[5] = {0};
     int count = 0;
@@ -290,7 +280,7 @@ int main() {
     unsigned char *jpg_data = NULL;
     char guide_name[7] = {0,};
     int guide_flag = 0;
-    Client clients_temp[2] = {0,};
+    Client clients_temp[MAX_CLIENTS] = {0,};
 
 
     const char* img1 = "img_client1_1.jpg";
@@ -458,6 +448,64 @@ int main() {
                     printf("broadcast\n");
                     broadcast_message(sockfd, clients_temp, "CONNCOMP");    
                 }
+            }
+        }
+        else if (recv_len >= 4 && strncmp(buffer, "DECO", 4) == 0 ){
+            if (!fp_final && !receiving_image_final) {
+                // 현재 시간 기반 파일명 생성
+                time_t now = time(NULL);
+                struct tm *t = localtime(&now);
+                strftime(filename_final, sizeof(filename_final), "image_%Y%m%d_%H%M%S.jpg", t);
+        
+                fp_final = fopen(filename_final, "wb");
+                if (!fp_final) {
+                    perror("파일 열기 실패");
+                    break;
+                }
+                printf("이미지 저장 시작합니다: %s\n", filename);
+            }
+            receiving_image_final = 1;
+            if (fp_final) {
+                fwrite(buffer + 4, 1, recv_len - 4, fp_final);
+            }
+        }
+        else if (strncmp(buffer, "EOFDECO", 7) == 0) {
+            // 마지막 파일 닫은 뒤 변수 초기화(안해줘도 되는 변수도 있지만 다 초기화)
+            if (fp_final)
+            {
+                fclose(fp_final);
+                fp_final = NULL;
+            }
+
+            receiving_image = 0;
+            receiving_image2 = 0;
+            receiving_image_final = 0;
+            count = 0;
+            jpg_size = 0;
+
+            jpg_data = NULL;
+            guide_flag = 0;
+            receiving_image_final = 0;
+            memset(&clients, 0, sizeof(clients));
+            memset(&clients_temp, 0, sizeof(clients_temp));
+
+            memset(guide_name, 0, sizeof(guide_name));
+            memset(buffer, 0, sizeof(buffer));
+            memset(filename, 0,sizeof(filename));
+            memset(filename2, 0, sizeof(filename2));
+            memset(filename_final, 0, sizeof(filename_final));
+            memset(header, 0, sizeof(header));
+            memset(msg, 0, sizeof(msg));
+
+            if (fp)
+            {
+                fclose(fp);
+                fp = NULL;
+            }
+            if (fp2)
+            {
+                fclose(fp2);
+                fp2 = NULL;
             }
         }
 
