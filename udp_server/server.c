@@ -38,7 +38,7 @@ void* time_sender_thread(void *arg) {
     int sockfd = args->sockfd;
     Client *clients = args->clients; 
     int count = 1;
-    shooting_count = 0;
+    shooting_count = 8;
 
     char time_buf[100];
     while (1) {
@@ -49,7 +49,7 @@ void* time_sender_thread(void *arg) {
         if (count == 0)
         {
             broadcast_message(sockfd, clients, "CAPT");
-            count = 1;
+            count = 9;
             shooting_count += 1;
         }
         if (shooting_count == 8)
