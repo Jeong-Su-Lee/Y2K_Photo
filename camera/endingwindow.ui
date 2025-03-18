@@ -16,22 +16,22 @@
   <widget class="QPushButton" name="btnEnding">
    <property name="geometry">
     <rect>
-     <x>810</x>
-     <y>480</y>
-     <width>146</width>
-     <height>50</height>
+     <x>830</x>
+     <y>508</y>
+     <width>168</width>
+     <height>56</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: #009DFF;
+    <string notr="true">
 font: 16pt &quot;Noto Sans CJK KR&quot;;
 border-radius: 25px;
-color: white;
+color: black;
 border: none;
 outline: none;</string>
    </property>
    <property name="text">
-    <string>Exit... 9</string>
+    <string>Exit... 59</string>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -40,17 +40,55 @@ outline: none;</string>
   <widget class="QLabel" name="lblImg">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>20</y>
-     <width>722</width>
-     <height>552</height>
+     <x>283</x>
+     <y>170</y>
+     <width>430</width>
+     <height>329</height>
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>600</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../../../../../../nfsroot/images/images.qrc">:/images/endingwindow.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>510</y>
+     <width>168</width>
+     <height>56</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../../../../../../nfsroot/images/images.qrc">:/images/basebtn.png</pixmap>
+   </property>
+  </widget>
+  <zorder>label</zorder>
+  <zorder>label_2</zorder>
+  <zorder>btnEnding</zorder>
+  <zorder>lblImg</zorder>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../../../nfsroot/images/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

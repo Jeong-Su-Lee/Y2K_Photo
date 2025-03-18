@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QUdpSocket>
 #include <QBuffer>
+#include <QImage>
 
 
 EndingWindow::EndingWindow(QWidget *parent) :
@@ -17,19 +18,21 @@ EndingWindow::EndingWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QPixmap pixmap("/mnt/nfs/decorated_image.jpg"); // image 로드
-
-    if (pixmap.isNull()) {
-        ui->lblImg->setText("이미지를 불러올 수 없습니다.");
-    } else {
-        ui->lblImg->setPixmap(pixmap);
+    QImage image;
+    if (!image.load("/mnt/nfs/decorated_image.jpg")) {
+        qWarning("Failed to load image!");
     }
+    image = image.scaled(430, 329, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui->lblImg->setPixmap(QPixmap::fromImage(image));
+
 
     connect(timer, SIGNAL(timeout()), this, SLOT(change_timeText()));
     timer->start(1000);
 
     connect(nextTimer, SIGNAL(timeout()), this, SLOT(go_to_firstWindow()));
-    nextTimer->start(1000*9 + 10);
+    nextTimer->start(1000*59 + 10);
+
+    yFreeStyle.startMusic();
 }
 
 EndingWindow::~EndingWindow()
@@ -42,6 +45,8 @@ EndingWindow::~EndingWindow()
 
 void EndingWindow::on_btnEnding_clicked()
 {
+    yFreeStyle.stopMusic();
+
     QHostAddress serverAddress("192.168.10.2"); // 서버 IP
     quint16 serverPort = 25000;
 

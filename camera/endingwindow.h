@@ -1,6 +1,7 @@
 #ifndef ENDINGWINDOW_H
 #define ENDINGWINDOW_H
 
+#include "bgmsoundplayer.h"
 #include <QWidget>
 #include <QTimer>
 
@@ -25,6 +26,7 @@ private:
     Ui::EndingWindow *ui;
     QTimer *timer;
     QTimer *nextTimer;
+    BgmSoundPlayer yFreeStyle;
 };
 
 #endif // ENDINGWINDOW_H
