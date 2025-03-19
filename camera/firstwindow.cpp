@@ -17,6 +17,7 @@ FirstWindow::~FirstWindow()
 
 void FirstWindow::on_btnFirst_clicked()
 {
+    ui->btnFirst->setEnabled(false);
     SecondWindow *secondWindow = new SecondWindow();
     this->hide();
     secondWindow->show();
