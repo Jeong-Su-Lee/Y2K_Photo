@@ -95,7 +95,7 @@ void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, 
             
             fclose(fp);
             // 이미지 전송 끝났으면 EOF 패킷 전송
-            msleep(500);
+            msleep(100);
             sendto(sockfd, "EOFFIN", 6, 0, (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
             
         }
@@ -436,7 +436,8 @@ int main() {
             guide_flag = 1;
             strncpy(guide_name, buffer, 6);
             msleep(200);
-            broadcast_message(sockfd, clients_temp, "SELG");            
+            broadcast_message(sockfd, clients_temp, "SELG");
+            memset(&clients_temp, 0, sizeof(clients_temp));
         }
         else if (recv_len >= 4 && strncmp(buffer, "TEMP", 4) == 0 ){
             if(find_client(clients_temp, &client_addr) == -1)
@@ -450,8 +451,8 @@ int main() {
                 {
                     printf("broadcast\n");
                     broadcast_message(sockfd, clients_temp, "CONNCOMP");
-                    memset(&clients_temp, 0, sizeof(clients_temp));
                     msleep(100);
+                    memset(&clients_temp, 0, sizeof(clients_temp));
                 }
             }
         }
@@ -492,7 +493,7 @@ int main() {
             guide_flag = 0;
             receiving_image_final = 0;
             memset(&clients, 0, sizeof(clients));
-            memset(&clients_temp, 0, sizeof(clients_temp));
+            // memset(&clients_temp, 0, sizeof(clients_temp));
 
             memset(guide_name, 0, sizeof(guide_name));
             memset(buffer, 0, sizeof(buffer));
