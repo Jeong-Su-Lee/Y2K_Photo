@@ -1,6 +1,7 @@
 #include "imagedecoration2.h"
 #include "ui_imagedecoration2.h"
 #include "endingwindow.h"
+#include "bgmsoundplayer2.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <QVBoxLayout>
@@ -186,6 +187,7 @@ void ImageDecoration2::saveImage() {
     painter.drawImage(0, imageY, canvas);
     finalImage.save("/mnt/sd/decorated_image.jpg", "JPG");
 
+    erevePlayer.stopMusic();
     EndingWindow *endingWindow = new EndingWindow();
     this->hide();
     endingWindow->show();

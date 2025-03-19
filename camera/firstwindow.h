@@ -1,6 +1,7 @@
 #ifndef FIRSTWINDOW_H
 #define FIRSTWINDOW_H
 
+#include <bgmsoundplayer2.h>
 #include <QWidget>
 
 namespace Ui {

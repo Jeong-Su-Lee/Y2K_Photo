@@ -29,7 +29,9 @@ SOURCES += main.cpp\
     udp_sender_thread.cpp \
     imagefilter2.cpp \
     imagedecoration2.cpp \
-    imageprocessworker.cpp
+    imageprocessworker.cpp \
+    bgmsoundthread2.cpp \
+    bgmsoundplayer2.cpp
     imageprocessworker.cpp
 
 HEADERS  += \
@@ -49,7 +51,9 @@ HEADERS  += \
     udp_sender_thread.h \
     imagefilter2.h \
     imagedecoration2.h \
-    imageprocessworker.h
+    imageprocessworker.h \
+    bgmsoundthread2.h \
+    bgmsoundplayer2.h
     imageprocessworker.h
 
 FORMS    += \

@@ -2,12 +2,14 @@
 #include "ui_firstwindow.h"
 #include "secondwindow.h"
 #include "endingwindow.h"
+#include "bgmsoundplayer2.h"
 
 FirstWindow::FirstWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FirstWindow)
 {
     ui->setupUi(this);
+    erevePlayer.startMusic();
 }
 
 FirstWindow::~FirstWindow()
