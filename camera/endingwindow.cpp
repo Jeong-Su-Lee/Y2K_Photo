@@ -8,7 +8,8 @@
 #include <QUdpSocket>
 #include <QBuffer>
 #include <QImage>
-
+#include <QProcess>
+#include <QApplication>
 
 EndingWindow::EndingWindow(QWidget *parent) :
     QWidget(parent),
@@ -45,6 +46,8 @@ EndingWindow::~EndingWindow()
 
 void EndingWindow::on_btnEnding_clicked()
 {
+    qDebug() << "클릭 첫 회";
+    ui->btnEnding->setEnabled(false);
     yFreeStyle.stopMusic();
 
     QHostAddress serverAddress("192.168.10.2"); // 서버 IP
@@ -77,11 +80,13 @@ void EndingWindow::on_btnEnding_clicked()
 
     udpSocket.writeDatagram("EOFDECO", serverAddress, serverPort);
 
-    FirstWindow *firstWindow = new FirstWindow();
-    firstWindow->show();
+    // FirstWindow *firstWindow = new FirstWindow();
+    // firstWindow->show();
 
     timer->stop();
     nextTimer->stop();
+    QProcess::startDetached("sh", QStringList() << "-c" << "./camera");
+    QApplication::quit();
 }
 
 

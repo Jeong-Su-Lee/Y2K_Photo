@@ -100,6 +100,7 @@ void UDPListenerThread::run()
                     }
                     qDebug() << "[클라] FINALIMAGE 수신 중";
                     FinalimageBuffer.append(datagram.mid(6));
+                    emit finalImageReceived();
                 }
                 else if (QString(datagram) == "EOFFIN") {
                     if (receivingFinalImage) {
@@ -117,7 +118,8 @@ void UDPListenerThread::run()
 
                         FinalimageBuffer.clear();
                         receivingFinalImage = false;
-                        emit finalImageReceived();
+                        running = false;
+                        
                     }
                 }
                 // 이미지 스트림 마지막 부분 받아서 화면에 띄워줌
@@ -130,7 +132,7 @@ void UDPListenerThread::run()
                     QImage image;
 
                     if (image.loadFromData(incomingImageBuffer, "JPG")) {
-                        image = image.scaled(640, 480, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                        image = image.scaled(425, 325, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                         emit imageReceived(image); // MainWindow로 시그널 emit 
                     } else {
 //                        qDebug() << "[UDP] 이미지 디코딩 실패";

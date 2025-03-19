@@ -56,6 +56,7 @@ ImageFilter2::~ImageFilter2()
 
 void ImageFilter2::on_saveButton_clicked()
 {
+    ui->saveButton->setEnabled(false);
     saveImage();
 }
 

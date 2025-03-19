@@ -179,6 +179,7 @@ void ImageDecoration2::redrawCanvas() {
 }
 
 void ImageDecoration2::saveImage() {
+    ui->saveButton->setEnabled(false);
     int imageY = (canvas.height() - image.height()) / 2;
     QImage finalImage(canvas.size(), QImage::Format_ARGB32_Premultiplied);
     finalImage.fill(Qt::white);
