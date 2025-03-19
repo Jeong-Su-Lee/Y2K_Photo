@@ -30,7 +30,7 @@ ImageDecoration2::ImageDecoration2(QWidget *parent) :
     };
 
     QVector<QColor> colors = {
-        QColor(79, 79, 79), QColor(159, 225, 153), QColor(249, 222, 149),
+        QColor(30, 30, 30), QColor(159, 225, 153), QColor(249, 222, 149),
         QColor(249, 149, 151), QColor(210, 239, 246), QColor(180, 200, 255)
     };
     currentColor = colors[0]; // 기본 펜 색상을 UI의 첫 번째 색상으로 설정
@@ -109,7 +109,7 @@ void ImageDecoration2::mouseMoveEvent(QMouseEvent *event) {
             break;
         }
         case WormPen: {
-            QColor borderColor = (currentColor == Qt::white || currentColor == QColor(79, 79, 79)) ? Qt::white : Qt::black;
+            QColor borderColor = (currentColor == Qt::white || currentColor == QColor(30, 30, 30)) ? Qt::white : Qt::black;
             int borderSize = currentBrushSize + 4;
             QPen borderPen(borderColor, borderSize);
             borderPen.setCapStyle(Qt::RoundCap);
