@@ -85,7 +85,7 @@ void EndingWindow::on_btnEnding_clicked()
 
     timer->stop();
     nextTimer->stop();
-    QProcess::startDetached("sh", QStringList() << "-c" << "./camera");
+    QProcess::startDetached("sh", QStringList() << "-c" << "camera");
     QApplication::quit();
 }
 
