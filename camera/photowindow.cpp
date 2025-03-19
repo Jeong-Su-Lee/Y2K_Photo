@@ -150,6 +150,7 @@ void PhotoWindow::change_timeText(const int timeCount)
 
 void PhotoWindow::go_to_nextWindow()
 {
+    camera->setExitFlag();
     if(udp_listener)
     {
         udp_listener->quit();
@@ -163,7 +164,6 @@ void PhotoWindow::go_to_nextWindow()
     imageFilter->show();
 
     timer->stop();
-    camera->setExitFlag();
 
 }
 

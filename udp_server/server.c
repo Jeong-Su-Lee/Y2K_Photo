@@ -90,11 +90,12 @@ void broadcast_message_with_file(int sockfd, Client clients[], const char *msg, 
                 if(sendto(sockfd, send_buffer, send_len, 0,(struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr)) == -1){
                     printf("Connection Error: %d (%s)\n", errno, strerror(errno));
                 }
+                msleep(10); // 안정성 확보를 위한 delay
             }
             
             fclose(fp);
-            
             // 이미지 전송 끝났으면 EOF 패킷 전송
+            msleep(500);
             sendto(sockfd, "EOFFIN", 6, 0, (struct sockaddr*)&clients[i].addr, sizeof(clients[i].addr));
             
         }
