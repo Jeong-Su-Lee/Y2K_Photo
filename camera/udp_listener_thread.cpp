@@ -117,6 +117,7 @@ void UDPListenerThread::run()
 
                         FinalimageBuffer.clear();
                         receivingFinalImage = false;
+                        running = false;
                         emit finalImageReceived();
                     }
                 }
